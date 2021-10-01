@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+
+<h1>Lista clientes</h1>
+
+
+   
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Identificación</th>
+        <th scope="col">Nombres</th>
+        <th scope="col">Apellidos</th>
+        <th scope="col">Teléfono</th>
+        <th scope="col">Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for cliente in lista_clientes %}
+      <tr>
+        <th scope="row">{{cliente.id}}</th>
+        <td>{{cliente.identificacion}}</td>
+        <td>{{cliente.nombres}}</td>
+        <td>{{cliente.apellidos}}</td>
+        <td>{{cliente.telefono_principal}}</td>
+        <td>{{cliente.estado_cliente}}</td>
+        <td><a class="btn btn-outline-info" href="{% url 'detalle_cliente' cliente.id %}" role="button">Ver</a></td>
+      </tr>
+      
+    {% endfor %}
+    </tbody>
+  </table>
+
+  
+
+  {% endblock %}
