@@ -13,7 +13,7 @@
 <h2>Estado Cliente: {{cliente.estado_cliente}}</h2>
 
 <a class="btn btn-primary" href="{% url 'lista_clientes'%}" role="button">Lista Clientes</a>
-<a class="btn btn-warning" href="#" role="button">Editar Cliente</a>
-<a class="btn btn-danger" href="#" role="button">Eliminar Cliente</a>
+<a class="btn btn-warning" href="{% url 'editar_cliente' cliente.id %}" role="button">Editar Cliente</a>
+<a class="btn btn-danger" href="{% url 'eliminar_cliente' cliente.id %}" role="button">Eliminar Cliente</a>
 
 {% endblock %}

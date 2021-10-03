@@ -20,7 +20,7 @@ class Cliente(models.Model):
     email = models.EmailField(max_length=254)
     telefono_principal = models.CharField(max_length=15)
     telefono_opcional = models.CharField(max_length=15, blank=True)
-    estado_cliente = models.ForeignKey(Estado_Cliente, on_delete=models.CASCADE)
+    estado_cliente = models.ForeignKey(Estado_Cliente, on_delete=models.CASCADE, default=1)
     
 
     def __str__(self):
