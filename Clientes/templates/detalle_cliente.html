@@ -3,17 +3,22 @@
 {% block contenido %}
 <h1>Información Personal del Cliente</h1>
 
-<h2>Id Cliente: {{cliente.id}}</h2>
-<h2>No. Identificación: {{cliente.identificacion}}</h2>
-<h2>Nombres: {{cliente.nombres}}</h2>
-<h2>Apellidos: {{cliente.apellidos}}</h2>
-<h2>Correo Electrónico: {{cliente.email}}</h2>
-<h2>No. Teléfono: {{cliente.telefono_principal}}</h2>
-<h2>No. Teléfono Alternativo: {{cliente.telefono_opcional}}</h2>
-<h2>Estado Cliente: {{cliente.estado_cliente}}</h2>
+<div class="card">
+    <h3 class="card-header">Cliente #{{cliente.id}} </h3>
+    <div class="card-body">
+      <h4 class="card-title">No. Identificación: {{cliente.identificacion}}</h4>
+      <h5 class="card-text">Nombres: {{cliente.nombres}}</h5>
+      <h5 class="card-text">Apellidos: {{cliente.apellidos}}</h5>
+      <h5 class="card-text">Email: {{cliente.email}}</h5>
+      <h5 class="card-text">No Teléfono: {{cliente.telefono_principal}}</h5>
+      {% if cliente.telefono_opcional %}
+      <h5 class="card-text">No Teléfono Opcional: {{cliente.telefono_opcional}}</h5>
+      {% endif %}
+      <h5 class="card-text">Estado Actual: {{cliente.estado_cliente}}</h5>
+      <a class="btn btn-primary" href="{% url 'lista_clientes'%}" role="button">Lista Clientes</a>
+      <a class="btn btn-warning" href="{% url 'editar_cliente' cliente.id %}" role="button">Editar Cliente</a>
+      <a class="btn btn-danger" href="{% url 'eliminar_cliente' cliente.id %}" role="button">Eliminar Cliente</a>
 
-<a class="btn btn-primary" href="{% url 'lista_clientes'%}" role="button">Lista Clientes</a>
-<a class="btn btn-warning" href="{% url 'editar_cliente' cliente.id %}" role="button">Editar Cliente</a>
-<a class="btn btn-danger" href="{% url 'eliminar_cliente' cliente.id %}" role="button">Eliminar Cliente</a>
-
+    </div>
+  </div>
 {% endblock %}

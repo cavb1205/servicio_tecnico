@@ -35,6 +35,7 @@ def crear_cliente(request):
     
     if request.method == 'POST':
         form = ClienteForm(request.POST)
+        print(form)
         if form.is_valid():
             cliente = form.save()
             print(cliente.id)
@@ -42,6 +43,7 @@ def crear_cliente(request):
 
     else:
         form = ClienteForm()
+        print(form)
     return render(request, 'cliente_form.html', {'form':form})
 
 
