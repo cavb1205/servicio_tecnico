@@ -35,7 +35,7 @@ def crear_cliente(request):
     
     if request.method == 'POST':
         form = ClienteForm(request.POST)
-        print(form)
+        
         if form.is_valid():
             cliente = form.save()
             print(cliente.id)
@@ -43,7 +43,6 @@ def crear_cliente(request):
 
     else:
         form = ClienteForm()
-        print(form)
     return render(request, 'cliente_form.html', {'form':form})
 
 
@@ -58,7 +57,8 @@ def editar_cliente(request, cliente_id):
             return redirect('detalle_cliente', cliente_id=cliente.id)
     else:
         form = ClienteForm(instance=cliente)
-    return render(request, 'cliente_form.html', {'form':form})
+        print(form)
+    return render(request, 'editar_cliente_form.html', {'form':form})
 
 
 

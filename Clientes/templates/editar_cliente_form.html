@@ -8,37 +8,37 @@
     
     <div class="col-md-4">
         <label for="id_{{form.identificacion.name}}" class="form-label">Identificación</label>
-        <input type="text" class="form-control" id="id_{{form.identificacion.name}}" name="{{form.identificacion.name}}"  required>
+        <input type="text" class="form-control" id="id_{{form.identificacion.name}}" name="{{form.identificacion.name}}" value="{{form.identificacion.value}}" required>
     </div>
     <div class="col-md-4">
       <label for="id_{{form.nombres.name}}" class="form-label">Nombres</label>
-      <input type="text" class="form-control" id="id_{{form.nombres.name}}" name="{{form.nombres.name}}"  required>
+      <input type="text" class="form-control" id="id_{{form.nombres.name}}" name="{{form.nombres.name}}" value="{{form.nombres.value}}" required>
     </div>
     <div class="col-md-4">
       <label for="id_{{form.apellidos.name}}" class="form-label">Apellidos</label>
-      <input type="text" class="form-control" id="id_{{form.apellidos.name}}" name="{{form.apellidos.name}}" required>
+      <input type="text" class="form-control" id="id_{{form.apellidos.name}}" name="{{form.apellidos.name}}" value="{{form.apellidos.value}}" required>
     </div>
     <div class="col-md-4">
       <label for="id_{{form.email.name}}" class="form-label">Email</label>
-      <input type="text" class="form-control" id="id_{{form.email.name}}" name="{{form.email.name}}" required>
+      <input type="text" class="form-control" id="id_{{form.email.name}}" name="{{form.email.name}}" value="{{form.email.value}}" required>
     </div>
     <div class="col-md-4">
         <label for="id_telefono_principal" class="form-label">Teléfono Principal</label>
-        <input type="text" class="form-control" id="id_telefono_principal" name="telefono_principal" required>
+        <input type="text" class="form-control" id="id_telefono_principal" name="telefono_principal" value="{{form.telefono_principal.value}}" required>
     </div>
     <div class="col-md-4">
         <label for="id_telefono_opcional" class="form-label">Teléfono Opcional</label>
-        <input type="text" class="form-control" id="id_telefono_opcional" name="telefono_opcional" required>
+        <input type="text" class="form-control" id="id_telefono_opcional" name="telefono_opcional" value="{{form.telefono_opcional.value}}" required>
     </div>
     <div class="col-md-3">
         <label for="id_estado_cliente" class="form-label">Estado Actual</label>
-        <select class="form-select" id="id_estado_cliente" name="estado_cliente"  >
+        <select class="form-select" id="id_estado_cliente" name="estado_cliente" value="{{form.estado_cliente.value}}" >
             <option value="1" selected>Activo</option>
             <option value="2">Inactivo</option>
         </select>
     </div>
     <div class="col-12">
-      <button class="btn btn-success" type="submit">Crear Registro</button>
+      <button class="btn btn-success" type="submit">Actualizar Registro</button>
     </div>
   </form>
 {% endblock %}
