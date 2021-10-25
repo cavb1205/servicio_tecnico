@@ -1,0 +1,64 @@
+{% extends 'base.html'%}
+
+{% block contenido %}
+<br>
+<br>
+<div class="row">
+  <div class="col-md">
+    <div class="card card-body">
+      <h1 class="text-center">Ordenes de Servicio</h1>
+      <h5 class="text-center">Total: 55</h5>
+      <a class="btn btn-outline-success btn-md " href="{% url 'buscar_cliente' %}" role="button">Crear Orden</a> <br>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md">
+      <div class="card text-white bg-primary">
+        <div class="card-header text-center"><h4>Ordenes de Servicio en Espera</h4></div>
+        <div class="card-body">
+          <h2 class="card-title text-center">22</h2>
+        </div>
+      </div>
+    </div>
+  <div class="col-md">
+    <div class="card text-white bg-warning">
+      <div class="card-header text-center"><h4>Ordenes de Servicio en Proceso</h4></div>
+      <div class="card-body">
+        <h2 class="card-title text-center">7</h2>
+      </div>
+    </div>
+  </div>
+  </div>
+  
+</div>
+
+
+<br>   
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Cliente</th>
+        <th scope="col">Dispositivo</th>
+        <th scope="col">Fecha Ingreso</th>
+        <th scope="col">Problema</th>
+        <th scope="col">Estado Orden</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for servicio in lista_servicios %}
+      <tr>
+        <th scope="row">{{servicio.id}}</th>
+        <td>{{servicio.cliente.nombres}} {{servicio.cliente.apellidos}}</td>
+        <td>{{servicio.dispositivo}}</td>
+        <td>{{servicio.fecha_ingreso}}</td>
+        <td>{{servicio.problema_frecuente}}</td>
+        <td>{{servicio.estado_orden}}</td>
+        <td><a class="btn btn-outline-info" href="{% url 'detalle_servicio' servicio.id %}" role="button">Ver</a></td>
+      </tr>
+      
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

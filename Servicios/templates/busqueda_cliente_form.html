@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
+
+<script>
+$(function() {
+    
+$( "#id_cliente" ).autocomplete({
+    source: "{% url 'lista_personas' %}"
+});
+});
+</script>
+
+<div class="row justify-content-center">
+    <div class="col-md-8 align-items-center">
+
+<br>
+<h2>Nueva Orden de Servicio</h2>
+<br>
+
+<a class="btn btn-primary" href="{% url 'crear_cliente_servicio' %}" role="button">Nuevo Cliente</a>
+<br>
+<br>
+
+<form class="row g-3" method="post" action="">
+    {% csrf_token %}
+    
+    
+<label for="id_cliente" class="form-label">Buscar Cliente</label>
+<input class="form-control" name="cliente" id="id_cliente" placeholder="Escribe rut o nombre para buscar...">
+
+
+
+<div class="col-12">
+    <button class="btn btn-success" type="submit">Buscar Cliente</button>
+    
+</div>
+
+
+  </form>
+  </div>
+  </div>
+{% endblock %}

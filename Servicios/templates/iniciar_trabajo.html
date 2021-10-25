@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+<br>
+<div class="row justify-content-center">
+  <div class="col-md-8 align-items-center">
+    <form method="post">
+      {% csrf_token %}
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title text-center">Actualizando Datos del Servicio</h2>
+          {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="text-danger"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+          {% endif %}
+    
+          <p class="card-text">{{form.as_p}}</p>
+          <div class="col-12">
+            <button class="btn btn-success" type="submit">Actualizar Orden</button>
+          </div>
+        </div>
+      </div>
+       
+        
+      
+        
+    </form>
+  </div>
+</div>
+<br>
+
+
+<script>
+  $( function() {
+    $( "#id_fecha_entrega_estimada" ).datepicker();
+  } );
+</script>
+{% endblock %}

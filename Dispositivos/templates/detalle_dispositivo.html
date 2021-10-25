@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+<br>
+<div class="row justify-content-center">
+  <div class="col-md-8 align-items-center">
+    <div class="card border-success" >
+      <div class="card-header bg-transparent border-success text-success"><h5>Dispositivo {{dispositivo.modelo_dispositivo}}</h5></div>
+      <div class="card-body">
+        <h6 class="card-title"><b>Serial:</b> {{dispositivo.serial}}</h6>
+        <h6 class="card-title"><b>Imei:</b> {{dispositivo.imei_principal}}</h6>
+        {% if dispositivo.imei_opcional %}
+          <h6 class="card-title"><b>Imei:</b> {{dispositivo.imei_principal}}</h6>
+        {% endif %}
+        <h6 class="card-title"><b>Dirección Mac:</b> {{dispositivo.direccion_mac}}</h6>
+        <h6 class="card-title"><b>Color Dispositivo:</b> {{dispositivo.color_dispositivo}}</h6>
+        <h6 class="card-title"><b>Tipo Dispositivo:</b> {{dispositivo.modelo_dispositivo.tipo_modelo}}</h6>
+        <h6 class="card-title"><b>Cliente:</b> {{dispositivo.cliente.identificacion}} - {{dispositivo.cliente.nombres}} {{dispositivo.cliente.apellidos}}</h6>
+      </div>
+   <a class="btn btn-outline-warning btn-sm btn-block" href="{% url 'editar_dispositivo' dispositivo.id %}" role="button"><b>Editar dispositivo</b></a>
+        <br>
+        <a class="btn btn-outline-danger btn-sm btn-block" href="{% url 'eliminar_dispositivo' dispositivo.id %}" role="button"><b>Eliminar dispositivo</b></a>
+  </div>
+    </div>
+  
+</div>
+
+
+
+     
+  
+     
+     
+      
+  
+    
+      
+      
+{% endblock %}

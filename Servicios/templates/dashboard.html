@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<h1>Total Ordenes de Servivio: {{total_orodenes_servicio}}</h1>
+
+<h1>Total Clientes: {{total_clientes}}</h1>
+
+<h2>clientes ordenes activas</h2>
+{% for i in clientes_ordenes_activas %}
+    {{i.cliente.nombres}}
+{% endfor %}
+
+
+
+{% endblock %}

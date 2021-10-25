@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+<br>
+<div class="row justify-content-center">
+  <div class="col-md-8 align-items-center">
+    <div class="card border-success" >
+      <div class="card-header bg-transparent border-success text-success"><h3>Orden de Servicio # {{servicio.id}}</h3></div>
+      <div class="card-body">
+        <h6 class="card-title"><b>Cliente:</b> {{servicio.cliente.identificacion}} - {{servicio.cliente.nombres}} {{servicio.cliente.apellidos}} <a class="btn btn-outline-info btn-sm" href="{% url 'detalle_cliente' servicio.cliente.id %}">Ver</a> </h6>
+        <h6 class="card-title"><b>Fecha de Ingreso:</b> {{servicio.fecha_ingreso}}</h6>
+        <h6 class="card-title"><b>Dispositivo:</b> <a href="{% url 'detalle_dispositivo' servicio.dispositivo.id %}"> {{servicio.dispositivo.modelo_dispositivo.marca}} {{servicio.dispositivo.modelo_dispositivo.modelo}}</a></h6>
+        <h6 class="card-title"><b>Color Dispositivo:</b> {{servicio.dispositivo.color_dispositivo}} </h6>
+        <h6 class="card-title"><b>Tipo Dispositivo:</b> {{servicio.dispositivo.modelo_dispositivo.tipo_modelo}}</h6>
+        <h6 class="card-title"><b>Problema Inicial:</b> {{servicio.problema_frecuente}}</h6>
+        <h6 class="card-title"><b>Observaciones:</b> {{servicio.observaciones}}</h6>
+        <h6 class="card-title"><b>Código Desbloqueo:</b> {{servicio.codigo_desbloqueo}}</h6>
+        <h6 class="card-title"><b>Patron Desbloqueo:</b> {{servicio.patron_desbloqueo}}</h6>
+        <h6 class="card-title"><b>Fecha Estimada Entrega:</b> {{servicio.fecha_entrega_estimada}}</h6>
+        <h6 class="card-title"><b>Valor Revisión:</b> <b class="text-primary">{{servicio.valor_revision}} CLP </b></h6>
+        <h6 class="card-title"><b>Valor Total Reparación:</b> <b class="text-warning">{{servicio.valor_total}} CLP</b></h6>
+        <h6 class="card-title"><b>Valor del Abono:</b> <b class="text-success">{{servicio.abono}} CLP</b></h6>
+        <h6 class="card-title"><b>Saldo Pendiente:</b> <b class="text-danger">{{servicio.saldo_pendiente}} CLP</b></h6>
+        <h6 class="card-title"><b>Solución de la Reparación:</b> {{servicio.solucion_final}}</h6>
+        <h6 class="card-title"><b>Estado de la Orden:</b> <b class="text-danger">{{servicio.estado_orden}}</b></h6>
+        {% if servicio.fecha_cierre_servicio %}
+          <h6 class="card-title"><b>Fecha Cierre:</b> {{servicio.fecha_cierre_servicio}}</h6>
+        {% endif %}
+      </div>
+      <div class="card-footer bg-transparent border-success text-center"><b>Acciones Disponibles</b> <br> <br>
+      
+        <a class="btn btn-outline-dark btn-sm btn-block" href="{% url 'iniciar_trabajo' servicio.id %}" role="button"><b>Trabajar en la Orden</b></a> <br><br>
+      
+        <a class="btn btn-outline-warning btn-sm btn-block" href="{% url 'editar_servicio' servicio.id %}" role="button"><b>Modificar Orden</b></a>
+        <a class="btn btn-outline-danger btn-sm btn-block" href="" role="button"><b>Eliminar Orden</b></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br>
+
+
+{% endblock %}

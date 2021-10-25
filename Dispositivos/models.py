@@ -13,16 +13,24 @@ class Tipo_Modelo(models.Model):
     def __str__(self):
         return self.nombre_tipo_modelo
 
+class Marca_Dispositivo(models.Model):
+    nombre_marca =  models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nombre_marca
+
 
 class Modelo_Dispositivo(models.Model):
     '''Nombre modelo del dispositivo'''
 
-    marca = models.CharField(max_length=100)
+    marca = models.ForeignKey(Marca_Dispositivo, on_delete=models.CASCADE)
     modelo = models.CharField(max_length=100)
     tipo_modelo = models.ForeignKey(Tipo_Modelo, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.modelo
+        modelos = str(self.marca.nombre_marca) + ' '+ self.modelo 
+        
+        return modelos
 
 
 class Color_Dispositivo(models.Model):
@@ -45,4 +53,4 @@ class Dispositivo(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.serial
+        return str(self.modelo_dispositivo) + ' ' + str(self.color_dispositivo) + ' ' + self.serial

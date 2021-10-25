@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+<br>
+<div class="row">
+  <div class="col-md">
+    <div class="card card-body">
+      <h1 class="text-center">Dispositivos</h1>
+    </div>
+  </div>
+  <div class="col-md">
+    
+      <div class="card card-body">
+        <div class="text-center card-title">Acciones Disponibles</div>
+        <a class="btn btn-outline-success btn-sm btn-block" href="{% url 'crear_dispositivo_individual' %}" role="button">Crear Dispositivo</a> <br>
+        <a class="btn btn-outline-success btn-sm btn-block" href="{% url 'crear_color' %}" role="button">Agregar Color</a> <br>
+        <a class="btn btn-outline-success btn-sm btn-block" href="{% url 'crear_modelo_dispositivo' %}" role="button">Agregar Modelo</a>
+      </div>
+    
+  </div>
+  <div class="col-md">
+    <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
+      <div class="card-header text-center">Total Dispositivos</div>
+      <div class="card-body">
+        <h2 class="card-title text-center">7</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<br>
+   
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Marca</th>
+        <th scope="col">Modelo</th>
+        <th scope="col">Color</th>
+        <th scope="col">Serial</th>
+        <th scope="col">Emai</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for dispositivo in lista_dispositivos %}
+      <tr>
+        <th scope="row">{{dispositivo.id}}</th>
+        <td>{{dispositivo.modelo_dispositivo.marca}}</td>
+        <td>{{dispositivo.modelo_dispositivo}}</td>
+        <td>{{dispositivo.color_dispositivo}}</td>
+        <td>{{dispositivo.serial}}</td>
+        <td>{{dispositivo.imei_principal}}</td>
+        <td><a class="btn btn-outline-info" href="{% url 'detalle_dispositivo' dispositivo.id %}" role="button">Ver</a></td>
+      </tr>
+      
+    {% endfor %}
+    </tbody>
+  </table>
+
+  
+
+  {% endblock %}

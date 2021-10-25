@@ -1,12 +1,27 @@
 {% extends 'base.html' %}
 
 {% block contenido %}
-<br>
-<h1>Lista Clientes</h1>
-<br>
-<a class="btn btn-primary" href="{% url 'crear_cliente' %}" role="button">Crear Cliente</a>
-<br>
+
+
+
 <br>   
+<div class="row">
+  <div class="col-md-4">
+    <div class="card card-body">   
+      <h1 class="card-title text-center">Clientes </h1>
+      <a href="{% url 'crear_cliente' %}" class="btn btn-outline-info btn-sm btn-block">Crear Cliente</a>
+  </div>
+  </div>
+  <div class="col-md">
+    <div class="card">
+    <div class="card-body">
+      <h4 class="card-title text-center">Total Clientes: </h4>
+      <h1 class="text-center text-success">{{total_clientes}}</h1>
+    </div>
+  </div>
+  </div>
+</div>
+
 <table class="table">
     <thead>
       <tr>

@@ -24,4 +24,8 @@ class Cliente(models.Model):
     
 
     def __str__(self):
-        return self.identificacion
+        nombres = (self.nombres)
+        apellidos = self.apellidos 
+        identificacion = self.identificacion
+        cliente = (nombres+' ' + apellidos + ' ' + identificacion)
+        return cliente
