@@ -4,51 +4,54 @@
 
 
 
-<br>   
-<div class="row">
-  <div class="col-md-4">
-    <div class="card card-body">   
-      <h1 class="card-title text-center">Clientes </h1>
-      <a href="{% url 'crear_cliente' %}" class="btn btn-outline-info btn-sm btn-block">Crear Cliente</a>
-  </div>
-  </div>
-  <div class="col-md">
-    <div class="card">
-    <div class="card-body">
-      <h4 class="card-title text-center">Total Clientes: </h4>
-      <h1 class="text-center text-success">{{total_clientes}}</h1>
+<br> 
+<div class="container">
+
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card card-body">   
+        <h1 class="card-title text-center">Clientes </h1>
+        <a href="{% url 'crear_cliente' %}" class="btn btn-outline-info btn-sm btn-block">Crear Cliente</a>
+    </div>
+    </div>
+    <div class="col-md">
+      <div class="card">
+      <div class="card-body">
+        <h4 class="card-title text-center">Total Clientes: </h4>
+        <h1 class="text-center text-success">{{total_clientes}}</h1>
+      </div>
+    </div>
     </div>
   </div>
-  </div>
-</div>
 
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Identificación</th>
-        <th scope="col">Nombres</th>
-        <th scope="col">Apellidos</th>
-        <th scope="col">Teléfono</th>
-        <th scope="col">Estado</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for cliente in lista_clientes %}
-      <tr>
-        <th scope="row">{{cliente.id}}</th>
-        <td>{{cliente.identificacion}}</td>
-        <td>{{cliente.nombres}}</td>
-        <td>{{cliente.apellidos}}</td>
-        <td>{{cliente.telefono_principal}}</td>
-        <td>{{cliente.estado_cliente}}</td>
-        <td><a class="btn btn-outline-info" href="{% url 'detalle_cliente' cliente.id %}" role="button">Ver</a></td>
-      </tr>
-      
-    {% endfor %}
-    </tbody>
-  </table>
+  <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Identificación</th>
+          <th scope="col">Nombres</th>
+          <th scope="col">Apellidos</th>
+          <th scope="col">Teléfono</th>
+          <th scope="col">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for cliente in lista_clientes %}
+        <tr>
+          <th scope="row">{{cliente.id}}</th>
+          <td>{{cliente.identificacion}}</td>
+          <td>{{cliente.nombres}}</td>
+          <td>{{cliente.apellidos}}</td>
+          <td>{{cliente.telefono_principal}}</td>
+          <td>{{cliente.estado_cliente}}</td>
+          <td><a class="btn btn-outline-info" href="{% url 'detalle_cliente' cliente.id %}" role="button">Ver</a></td>
+        </tr>
+        
+      {% endfor %}
+      </tbody>
+    </table>
 
-  
+</div>  
 
   {% endblock %}

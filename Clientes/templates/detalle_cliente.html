@@ -5,7 +5,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md">
-      <div class="card card-body">
+      <div class="card card-body mt-2">
         <h4 class="card-title">Cliente: {{cliente.identificacion}}</h4>
         <h5>{{cliente.nombres}} {{cliente.apellidos}}</h5>
         <a href="{% url 'editar_cliente' cliente.id %}" class="btn btn-outline-info btn-sm btn-block">Actualizar Cliente</a>
@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="col-md">
-      <div class="card card-body">
+      <div class="card card-body mt-2">
         <h5 class="card-title">Información de Contacto</h5>
         <p>Email: {{cliente.email}}</p>
         <p>No. Teléfono: {{cliente.telefono_principal}}</p>
@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="col-md">
-      <div class="card card-body">
+      <div class="card card-body mt-2">
         <h5 class="card-title">Total Ordenes de Servicio</h5>
         <h1 class="text-center">{{total_ordenes}}</h1>
       </div>
@@ -32,7 +32,7 @@
   <br>
   <div class="row">
     <div class="col-md">
-      <div class="card card-body">
+      <div class="card card-body ">
         <h4>Dispositivos Vinculados:</h4>
         <table class="table table-sm">
           <thead class="table-light">
@@ -58,7 +58,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row mt-3">
     <div class="col-md">
       <dic class="card card-body">
         <h4>Ordenes de Servicio</h4>

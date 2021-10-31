@@ -141,7 +141,7 @@ def iniciar_trabajo(request, servicio_id):
         form = IniciarTrabajoForm(request.POST, instance=servicio)
         if form.is_valid():
             orden = form.save(commit=False)
-            if orden.estado_orden.nombre == 'Finalizado':
+            if orden.estado_orden.nombre == 'Orden cancelada, espera entregar equipo al cliente':
                 print('ingresa a if de finalizado')
                 servicio.valor_total = servicio.valor_revision
                 if servicio.abono < servicio.valor_total:
@@ -149,7 +149,7 @@ def iniciar_trabajo(request, servicio_id):
                     return render(request, 'iniciar_trabajo.html',{'form':form})
                 servicio.solucion_final = 'El cliente decidió no reparar el equipo, la orden queda cerrada'
                 servicio.fecha_cierre_servicio = datetime.today()
-            elif orden.estado_orden.nombre == 'Reparado':
+            elif orden.estado_orden.nombre == 'Orden reparada, entregada al cliente':
                 print('ingresa al if de reparado')
                 if servicio.abono < servicio.valor_total:
                     messages.warning(request, 'No se puede cerrar la orden de servicio con saldo pendiente por pagar...') 
@@ -165,35 +165,203 @@ def iniciar_trabajo(request, servicio_id):
 
 
 
+def ordenes_listas_para_reparar(request):
+    lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden aprobada para reparación')
+    total_ordenes = lista_ordenes.count()
+    nombre_lista = 'Ordenes Listas Para Reparación'
+    context = {
+        'lista_ordenes':lista_ordenes,
+        'total_ordenes':total_ordenes,
+        'nombre_lista':nombre_lista,
+    }
+    return render(request, 'lista_ordenes.html', context)
+
+def ordenes_espera_revision(request):
+    lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Revisión')
+    total_ordenes = lista_ordenes.count()
+    nombre_lista = 'Ordenes en espera de revisión'
+    context = {
+        'lista_ordenes':lista_ordenes,
+        'total_ordenes':total_ordenes,
+        'nombre_lista':nombre_lista,
+    }
+    return render(request, 'lista_ordenes.html', context)
+
+
+def ordenes_espera_confirmar_reparaion(request):
+       lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Confirmación de Reparación')
+       total_ordenes = lista_ordenes.count()
+       nombre_lista = 'Ordenes en confirmar reparación'
+       context = {
+       'lista_ordenes':lista_ordenes,
+       'total_ordenes':total_ordenes,
+       'nombre_lista':nombre_lista,
+           }
+       return render(request, 'lista_ordenes.html', context)
+
+
+def ordenes_espera_repuestos(request):
+       lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden a la espera de repuestos')
+       total_ordenes = lista_ordenes.count()
+       nombre_lista = 'Ordenes en espera de repuestos'
+       context = {
+       'lista_ordenes':lista_ordenes,
+       'total_ordenes':total_ordenes,
+       'nombre_lista':nombre_lista,
+           }
+       return render(request, 'lista_ordenes.html', context)
+
+
+def ordenes_listas_entrega(request):
+       lista_ordenes_canceladas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden cancelada, espera entregar equipo al cliente')
+       lista_ordenes_no_reparadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden no reparada, espera entrega al cliente')
+       lista_ordenes_reparadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden reparada, espera entrega al cliente')
+       
+       total_ordenes = lista_ordenes_canceladas.count() + lista_ordenes_no_reparadas.count() + lista_ordenes_reparadas.count()
+       nombre_lista = 'Ordenes listas para entrega al cliente'
+       context = {
+       'lista_ordenes_canceladas':lista_ordenes_canceladas,
+       'lista_ordenes_no_reparadas':lista_ordenes_no_reparadas,
+       'lista_ordenes_reparadas':lista_ordenes_reparadas,
+       'total_ordenes':total_ordenes,
+       'nombre_lista':nombre_lista,
+           }
+       return render(request, 'lista_ordenes_entregar.html', context)
+
+
+def ordenes_canceladas(request):
+       ordenes_canceladas_entregadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden cancelada, equipo entregado al cliente')
+       ordenes_no_reparadas_entregadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden no reparada, entregada al cliente')
+       total_ordenes = ordenes_canceladas_entregadas.count() + ordenes_no_reparadas_entregadas.count()
+       nombre_lista = 'Ordenes canceladas o no reparadas'
+       context = {
+       'ordenes_canceladas_entregadas':ordenes_canceladas_entregadas,
+       'ordenes_no_reparadas_entregadas':ordenes_no_reparadas_entregadas,
+       'total_ordenes':total_ordenes,
+       'nombre_lista':nombre_lista,
+           }
+       return render(request, 'lista_ordenes_canceladas.html', context)
+
+
+def ordenes_reparadas(request):
+       lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden reparada, entregada al cliente')
+       total_ordenes = lista_ordenes.count()
+       nombre_lista = 'Ordenes Reparadas'
+       context = {
+       'lista_ordenes':lista_ordenes,
+       'total_ordenes':total_ordenes,
+       'nombre_lista':nombre_lista,
+           }
+       return render(request, 'lista_ordenes.html', context)
+
+
 
 
 def dashboard(request):
-    ordenes_servicio = Servicios.objects.all()
-    total_orodenes_servicio = ordenes_servicio.count()
-    ordenes_espera_revision = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Revisión')
-    ordenes_en_revision = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Revisión')
-    ordenes_espera_repuestos = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Repuestos')
-    ordenes_espera_confirmacion_reparacion = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Confirmación de Reparación')
-    ordenes_reparadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Reparado')
-    ordenes_finalizadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Finalizado')
+    ##consultas de ordenes a la bd
     
-    #clientes
-    clientes = Cliente.objects.all()
+    ordenes_espera_revision = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Revisión')
+    ordenes_espera_confirmar_reparacion = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Confirmación de Reparación')
+    ordenes_canceladas_espera_entrega = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden cancelada, espera entregar equipo al cliente')
+    ordenes_canceladas_entregadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden cancelada, equipo entregado al cliente')
+    ordenes_aprobadas_reparacion = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden aprobada para reparación')
+    ordenes_espera_repuestos = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden a la espera de repuestos')
+    ordenes_reparadas_espera_entrega = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden reparada, espera entrega al cliente')
+    ordenes_reparadas_entregadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden reparada, entregada al cliente')
+    ordenes_no_reparadas_espera_entrega = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden no reparada, espera entrega al cliente')
+    ordenes_no_reparadas_entregadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden no reparada, entregada al cliente')
+    
+    clientes = Cliente.objects.all().order_by('-id')
+
+    
+    #totales
     total_clientes = clientes.count()
-    clientes_ordenes_activas = Servicios.objects.exclude(estado_orden__nombre__icontains = 'Reparado').exclude(estado_orden__nombre__icontains = 'Finalizado')
+    total_ordenes_servicio = Servicios.objects.all().count()
+    total_ordenes_espera_revision = ordenes_espera_revision.count()
+    total_ordenes_espera_confirmar_reparacion = ordenes_espera_confirmar_reparacion.count()
+    total_ordenes_canceladas_espera_entrega = ordenes_canceladas_espera_entrega.count()
+    total_ordenes_canceladas_entregadas = ordenes_canceladas_entregadas.count()
+    total_ordenes_aprobadas_reparacion = ordenes_aprobadas_reparacion.count()
+    total_ordenes_espera_repuestos = ordenes_espera_repuestos.count()
+    total_ordenes_reparadas_espera_entrega = ordenes_reparadas_espera_entrega.count()
+    total_ordenes_reparadas_entregadas = ordenes_reparadas_entregadas.count()
+    total_ordenes_no_reparadas_espera_entrega = ordenes_no_reparadas_espera_entrega.count()
+    total_ordenes_no_reparadas_entregadas = ordenes_no_reparadas_entregadas.count()
+    total_ordenes_por_entregar = total_ordenes_no_reparadas_espera_entrega + total_ordenes_reparadas_espera_entrega + total_ordenes_canceladas_espera_entrega
+    total_ordenes_canceladas = total_ordenes_canceladas_entregadas + total_ordenes_no_reparadas_entregadas
+
+    #clientes pendientes para entregar equipos
+    ordenes_pendientes = Servicios.objects.all().exclude(estado_orden__nombre__icontains = 'En Espera de Revisión').exclude(estado_orden__nombre__icontains = 'En Espera de Confirmación de Reparación').exclude(estado_orden__nombre__icontains = 'Orden cancelada, equipo entregado al cliente').exclude(estado_orden__nombre__icontains = 'Orden aprobada para reparación').exclude(estado_orden__nombre__icontains = 'Orden a la espera de repuestos').exclude(estado_orden__nombre__icontains = 'Orden reparada, entregada al cliente').exclude(estado_orden__nombre__icontains = 'Orden no reparada, entregada al cliente')
+    clientes_ordenes_pendientes = []
+    for orden in ordenes_pendientes:
+        clientes_ordenes_pendientes.append(clientes.get(id=orden.cliente.id))
+
+    total_clientes_ordenes_pendientes = len(clientes_ordenes_pendientes)
+
+
+    #calcular ingresos del dia
+    hoy = datetime.now()
+    hoy = hoy.strftime("%y-%m-%d")
+    ingresos_hoy = ordenes_reparadas_entregadas.filter(fecha_cierre_servicio__icontains = hoy)
+    total_ingresos_dia = 0
+    for orden in ingresos_hoy:
+        print('ingresa al if')
+        total_ingresos_dia = total_ingresos_dia + orden.valor_total
+        
+
+    #calcular ingresos de la semana
+    semana = datetime.now().isocalendar()[1]
+    total_ingresos_semana = 0
+    for orden in ordenes_reparadas_entregadas:
+        if orden.fecha_cierre_servicio.isocalendar()[1] == semana:
+            print('ingresa al if de la semana')
+            total_ingresos_semana = total_ingresos_semana + orden.valor_total
+            
+    #calcula ingresos del mes
+    mes = datetime.now()
+    mes = mes.strftime("%m")
+    total_ingresos_mes = 0
+    for orden in ordenes_reparadas_entregadas:
+        if orden.fecha_cierre_servicio.strftime("%m") == mes:
+            total_ingresos_mes = total_ingresos_mes + orden.valor_total
+
+    #calcular ingresos del año
+    ano = datetime.now().strftime("%y")
+    total_ingresos_ano = 0
+    for orden in ordenes_reparadas_entregadas:
+        if orden.fecha_cierre_servicio.strftime('%y') == ano:
+            total_ingresos_ano = total_ingresos_ano + orden.valor_total
+
+
 
     context = {
         
-        'total_orodenes_servicio':total_orodenes_servicio,
-        'ordenes_espera_revision':ordenes_espera_revision,
-        'ordenes_en_revision':ordenes_en_revision,
-        'ordenes_reparadas':ordenes_reparadas,
-        'ordenes_finalizadas':ordenes_finalizadas,
-        'ordenes_espera_repuestos':ordenes_espera_repuestos,
-        'ordenes_espera_confirmacion_reparacion':ordenes_espera_confirmacion_reparacion,
-
         'total_clientes':total_clientes,
-        'clientes_ordenes_activas':clientes_ordenes_activas,
+        'total_ordenes_servicio':total_ordenes_servicio,
+        'total_ordenes_espera_revision':total_ordenes_espera_revision,
+        'total_ordenes_espera_confirmar_reparacion':total_ordenes_espera_confirmar_reparacion,
+        'total_ordenes_canceladas_espera_entrega':total_ordenes_canceladas_espera_entrega,
+        'total_ordenes_canceladas_entregadas':total_ordenes_canceladas_entregadas,
+        'total_ordenes_aprobadas_reparacion':total_ordenes_aprobadas_reparacion,
+        'total_ordenes_espera_repuestos':total_ordenes_espera_repuestos,
+        'total_ordenes_reparadas_espera_entrega':total_ordenes_reparadas_espera_entrega,
+        'total_ordenes_reparadas_entregadas':total_ordenes_reparadas_entregadas,
+        'total_ordenes_no_reparadas_espera_entrega':total_ordenes_no_reparadas_espera_entrega,
+        'total_ordenes_no_reparadas_entregadas':total_ordenes_no_reparadas_entregadas,
+        'total_ordenes_por_entregar':total_ordenes_por_entregar,
+        'total_ordenes_canceladas':total_ordenes_canceladas,
+
+
+        'clientes_ordenes_pendientes':clientes_ordenes_pendientes,
+        'total_clientes_ordenes_pendientes':total_clientes_ordenes_pendientes,
+
+      
+
+        #ingresos
+        'total_ingresos_dia':total_ingresos_dia,
+        'total_ingresos_semana':total_ingresos_semana,
+        'total_ingresos_mes':total_ingresos_mes,
+        'total_ingresos_ano':total_ingresos_ano,
 
 
 

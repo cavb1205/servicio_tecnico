@@ -6,6 +6,7 @@ from Dispositivos.models import *
 from .models import *
 from .views import *
 from Dispositivos.models import Dispositivo
+from Servicios.models import Estado_Orden
 
 
 class Problemas_FrecuentesForm(ModelForm):
@@ -78,6 +79,7 @@ class ServiciosForm(ModelForm):
         self.initial['valor_revision'] = 0
         self.initial['codigo_desbloqueo'] = 'N/A'
         self.initial['patron_desbloqueo'] = 0
+        self.initial['estado_orden'] = Estado_Orden.objects.get(nombre__icontains='En Espera de Revisión')
     
     class Meta:
         model = Servicios

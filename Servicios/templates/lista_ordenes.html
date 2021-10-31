@@ -1,0 +1,48 @@
+{% extends 'base.html'%}
+
+{% block contenido %}
+<br>
+<div class="container">
+
+
+<div class="row">
+  <div class="col-md">
+    <div class="card card-body">
+      <h1 class="text-center text-success">{{nombre_lista}}</h1>
+      <h5 class="text-center">Total: {{total_ordenes}}</h5>
+    </div>
+  </div>
+  
+  
+</div>
+
+
+<br>   
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Cliente</th>
+        <th scope="col">Dispositivo</th>
+        <th scope="col">Fecha Ingreso</th>
+        <th scope="col">Problema</th>
+        <th scope="col">Estado Orden</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for orden in lista_ordenes %}
+      <tr>
+        <th scope="row">{{orden.id}}</th>
+        <td>{{orden.cliente.nombres}} {{orden.cliente.apellidos}}</td>
+        <td>{{orden.dispositivo}}</td>
+        <td>{{orden.fecha_ingreso}}</td>
+        <td>{{orden.problema_frecuente}}</td>
+        <td>{{orden.estado_orden}}</td>
+        <td><a class="btn btn-outline-info" href="{% url 'detalle_servicio' orden.id %}" role="button">Ver</a></td>
+      </tr>
+      
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

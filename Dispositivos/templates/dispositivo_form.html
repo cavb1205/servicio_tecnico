@@ -1,18 +1,23 @@
 {% extends 'base.html' %}
 
 {% block contenido %}
-<br>
-<h2>Nuevo Dispositivo</h2>
-<br>
-<form class="row g-3" method="post">
-    {% csrf_token %}
-    {% for field in form %}
-    <div class="form-label">
-        {{field.label_tag}} {{field}}
-    </div>
-    {% endfor %}
-    <div class="col-12">
-      <button class="btn btn-success" type="submit">Crear Registro</button>
-    </div>
-  </form>
+<div class="row justify-content-center">
+  <div class="col-md-8 align-items-center">
+    <br>
+    <h2>Nuevo Dispositivo</h2>
+    <br>
+    <form class="row g-3" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-label">
+            {{field.label_tag}} {{field}}
+        </div>
+        {% endfor %}
+        <div class="col-12">
+          <button class="btn btn-success" type="submit">Crear Registro</button>
+        </div>
+      </form>
+  </div>
+</div>
+
 {% endblock %}

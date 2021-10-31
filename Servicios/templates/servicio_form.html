@@ -2,27 +2,35 @@
 
 {% block contenido %}
 
+<div class="content">
 
-<br>
-<h2>Nueva Orden de Servicio</h2>
-<br>
-<a class="btn btn-primary" href="{% url 'crear_cliente_servicio' %}" role="button">Crear Cliente</a>
-<a class="btn btn-primary" href="{% url 'crear_dispositivo' cliente_id=cliente.id %}" role="button">Crear Dispositivo</a>
-<br>
-<br>
-<form class="row g-3" method="post">
-    {% csrf_token %}
-    
-    {{form.as_p}}
-    <input size="16" type="text" class="form-control" id="id_fecha_entrega_estimada" readonly>
-    <div class="col-12">
-      <button class="btn btn-success" type="submit">Guardar</button>
-    </div>
-  </form>
+  <div class="row justify-content-center">
+    <div class="col-md-8 align-items-center">
 
-  <script>
-    $( function() {
-      $( "#id_fecha_entrega_estimada" ).datepicker();
-    } );
-  </script>
+  <br>
+  <h2>Nueva Orden de Servicio</h2>
+  <br>
+  <a class="btn btn-primary" href="{% url 'crear_cliente_servicio' %}" role="button">Crear Cliente</a>
+  <a class="btn btn-primary" href="{% url 'crear_dispositivo' cliente_id=cliente.id %}" role="button">Crear Dispositivo</a>
+  <br>
+  <br>
+  <form class="row g-3" method="post">
+      {% csrf_token %}
+      
+      {{form.as_p}}
+      
+      <div class="col-12">
+        <button class="btn btn-success" type="submit">Guardar</button>
+      </div>
+    </form>
+
+    <script>
+      $( function() {
+        $( "#id_fecha_entrega_estimada" ).datepicker();
+      } );
+    </script>
+</div>
+</div>
+
+</div>
 {% endblock %}
