@@ -1,5 +1,7 @@
 from django.db import models
 from django.db.models.base import Model
+from django.contrib.auth.models import User
+
 
 
 class Estado_Cliente(models.Model):
@@ -29,3 +31,5 @@ class Cliente(models.Model):
         identificacion = self.identificacion
         cliente = (nombres+' ' + apellidos + ' ' + identificacion)
         return cliente
+
+

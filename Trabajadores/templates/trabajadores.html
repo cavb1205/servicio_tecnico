@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+
+
+
+<br> 
+<div class="container">
+
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card card-body">   
+        <h1 class="card-title text-center">Trabajadores </h1>
+        <a href="#" class="btn btn-outline-info btn-sm btn-block">Crear Trabajador</a>
+    </div>
+    </div>
+    <div class="col-md">
+      <div class="card">
+      <div class="card-body">
+        <h4 class="card-title text-center">Total Trabajadores: </h4>
+        <h1 class="text-center text-success">{{total_trabajadores}}</h1>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Nombres</th>
+          <th scope="col">Apellidos</th>
+          <th scope="col">Email</th>
+          <th scope="col">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for trabajador in lista_trabajadores %}
+        <tr>
+          <th scope="row">{{trabajador.id}}</th>
+          <td>{{trabajador.first_name}}</td>
+          <td>{{trabajador.last_name}}</td>
+          <td>{{trabajador.email}}</td>
+          {% if trabajador.is_active %}
+            <td>Activo</td>
+          {% else %}
+            <td>Inactivo</td>
+          {% endif %}
+          <td><a class="btn btn-outline-info" href="{% url 'detalle_trabajador' trabajador.id %}" role="button">Ver</a></td>
+        </tr>
+        
+      {% endfor %}
+      </tbody>
+    </table>
+
+</div>  
+
+  {% endblock %}

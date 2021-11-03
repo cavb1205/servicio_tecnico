@@ -16,12 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
-from Servicios import views
+
+from Servicios.views import dashboard
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('clientes/', include('Clientes.urls')),
+    path('trabajadores/', include('Trabajadores.urls')),
     path('dispositivo/', include('Dispositivos.urls')),
     path('servicios/', include('Servicios.urls')),
-    path('', views.dashboard, name='dashboard'),
+    path('', dashboard, name='dashboard'),
+    
 ]

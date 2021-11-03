@@ -53,4 +53,4 @@ class Dispositivo(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.modelo_dispositivo) + ' ' + str(self.color_dispositivo) + ' ' + self.serial
+        return str(self.modelo_dispositivo) + ' ' + str(self.color_dispositivo) 

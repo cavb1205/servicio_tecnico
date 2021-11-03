@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col-md">
+      <div class="card card-body mt-2">
+        <h4 class="card-title">Trabajador: </h4>
+        <h5>{{trabajador.get_full_name}}</h5>
+        <a href="" class="btn btn-outline-info btn-sm btn-block">Actualizar Trabajador</a>
+        <a href="" class="btn btn-outline-danger btn-sm btn-block">Eliminar Trabajador</a>
+      </div>
+    </div>
+    <div class="col-md">
+      <div class="card card-body mt-2">
+        <h5 class="card-title">Información de Contacto</h5>
+        <p>Email: {{trabajador.email}}</p>
+        <p>No. Teléfono: FALTA POR AGREGAR CAMPO</p>
+        
+      </div>
+    </div>
+    <div class="col-md">
+      <div class="card card-body mt-2">
+        <h5 class="card-title">Total Ordenes de Servicio</h5>
+        <h1 class="text-center">77</h1>
+      </div>
+    </div>
+  </div>
+  <br>
+  
+  <div class="row mt-3">
+    <div class="col-md">
+      <dic class="card card-body">
+        <h4>Ordenes de Servicio</h4>
+        <table class="table table-sm">
+          <thead class="table-light">
+            <tr>
+              <br>
+              <th scope="col">#</th>
+              <th scope="col">Dispositivo</th>
+              <th scope="col">Fecha Ingreso</th>
+              <th scope="col">Problema</th>
+              <th scope="col">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for servicio in servicios %}
+              <tr>
+                <th scope="row"><a href="{% url 'detalle_servicio' servicio.id %}">{{servicio.id}}</a></th>
+                <td>{{servicio.dispositivo}}</td>
+                <td>{{servicio.fecha_ingreso}}</td>
+                <td>{{servicio.problema_frecuente}}</td>
+                <td>{{servicio.estado_orden}}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </dic>
+    </div>
+  </div>
+</div>
+
+
+
+
+   
+{% endblock %}

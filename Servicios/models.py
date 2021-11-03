@@ -42,6 +42,8 @@ class Servicios(models.Model):
     saldo_pendiente = models.DecimalField(max_digits=10, decimal_places=0, default=0)
     fecha_cierre_servicio = models.DateTimeField(null=True, blank=True)
     solucion_final = models.TextField(blank=True, null=True)
+    tecnico = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+
 
     def __str__(self):
         return self.observaciones
