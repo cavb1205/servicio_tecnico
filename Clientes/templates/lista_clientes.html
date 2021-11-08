@@ -41,8 +41,8 @@
         <tr>
           <th scope="row">{{cliente.id}}</th>
           <td>{{cliente.identificacion}}</td>
-          <td>{{cliente.nombres}}</td>
-          <td>{{cliente.apellidos}}</td>
+          <td>{{cliente.nombres|title}}</td>
+          <td>{{cliente.apellidos|title}}</td>
           <td>{{cliente.telefono_principal}}</td>
           <td>{{cliente.estado_cliente}}</td>
           <td><a class="btn btn-outline-info" href="{% url 'detalle_cliente' cliente.id %}" role="button">Ver</a></td>

@@ -6,8 +6,11 @@
   <div class="row">
     <div class="col-md">
       <div class="card card-body mt-2">
-        <h4 class="card-title">Trabajador: </h4>
-        <h5>{{trabajador.get_full_name}}</h5>
+        <h4 class="card-title">Trabajador: {{trabajador.perfil.identificacion}} </h4>
+        <h5>{{trabajador.get_full_name|title}}</h5>
+        {% if trabajador.perfil.biografia %}
+          <p>{{trabajador.perfil.biografia}}</p>
+        {% endif %}
         <a href="" class="btn btn-outline-info btn-sm btn-block">Actualizar Trabajador</a>
         <a href="" class="btn btn-outline-danger btn-sm btn-block">Eliminar Trabajador</a>
       </div>
@@ -16,14 +19,20 @@
       <div class="card card-body mt-2">
         <h5 class="card-title">Información de Contacto</h5>
         <p>Email: {{trabajador.email}}</p>
-        <p>No. Teléfono: FALTA POR AGREGAR CAMPO</p>
+        <p>No. Teléfono: {{trabajador.perfil.telefono}}</p>
+        <p>Grupo:</p>
+        <ul>
+          {% for grupo in trabajador.groups.all %}
+            <li>{{grupo.name}}</li>
+          {% endfor %}
+        </ul>
         
       </div>
     </div>
     <div class="col-md">
       <div class="card card-body mt-2">
-        <h5 class="card-title">Total Ordenes de Servicio</h5>
-        <h1 class="text-center">77</h1>
+        <h5 class="card-title text-center">Total Ordenes de Servicio</h5>
+        <h1 class="text-center text-success"><b>{{servicios.count}}</b></h1>
       </div>
     </div>
   </div>

@@ -10,11 +10,12 @@
         <div class="card-body">
           <h2 class="card-title text-center">Actualizando Datos del Servicio</h2>
           {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                <li{% if message.tags %} class="text-danger"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
+            {% for message in messages %}
+              <div class="alert alert-danger" role="alert">
+                {{ message }}
+              </div> 
+            {% endfor %}
+            
           {% endif %}
     
           <p class="card-text">{{form.as_p}}</p>

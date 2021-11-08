@@ -78,13 +78,12 @@ class ServiciosForm(ModelForm):
         self.fields['dispositivo'].queryset = Dispositivo.objects.filter(cliente=cliente.id)
         self.initial['valor_revision'] = 0
         self.initial['codigo_desbloqueo'] = 'N/A'
-        self.initial['patron_desbloqueo'] = 0
-        self.initial['estado_orden'] = Estado_Orden.objects.get(nombre__icontains='En Espera de Revisión')
+        #self.initial['estado_orden'] = Estado_Orden.objects.get(nombre__icontains='En Espera de Revisión')
     
     class Meta:
         model = Servicios
         fields = [
-            'cliente','dispositivo','fecha_entrega_estimada','estado_orden','problema_frecuente','observaciones','codigo_desbloqueo','patron_desbloqueo','valor_revision','valor_total','abono','solucion_final'
+            'cliente','dispositivo','fecha_entrega_estimada','problema_frecuente','observaciones','codigo_desbloqueo','valor_revision','valor_total','abono'
         ]
         
         widgets = {
@@ -107,7 +106,7 @@ class ServiciosForm(ModelForm):
 class IniciarTrabajoForm(ModelForm): 
     class Meta:
         model = Servicios 
-        fields = ['fecha_entrega_estimada','estado_orden','abono','problema_frecuente','observaciones','valor_total','solucion_final']
+        fields = ['fecha_entrega_estimada','estado_orden','abono','problema_frecuente','observaciones','valor_total','solucion_final','tecnico']
         widgets = {
             'fecha_entrega_estimada': forms.DateInput(attrs={'class':'form-control'}),
             'estado_orden': forms.Select(attrs={'class':'form-control'}),
@@ -116,4 +115,5 @@ class IniciarTrabajoForm(ModelForm):
             'observaciones': forms.Textarea(attrs={'class':'form-control'}),
             'valor_total': forms.NumberInput(attrs={'class':'form-control'}),
             'solucion_final': forms.Textarea(attrs={'class':'form-control'}),
+            'tecnico': forms.Select(attrs={'class':'form-control'}),
         }

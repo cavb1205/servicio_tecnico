@@ -38,14 +38,18 @@ def crear_servicio(request, cliente_id):
         print('ingresamos al meth post de crear servicio e imprimimos')
         
         form = ServiciosForm(cliente, request.POST)
-        
-        
         if form.is_valid():
-            print('ingresa a form valid')
-            print(form)
-            servicio = form.save()
-            print(servicio.id)
-            return redirect('detalle_servicio', servicio_id=servicio.id)
+            servicio = form.save(commit=False)
+            if servicio.valor_total > 0:
+                servicio.saldo_pendiente = servicio.valor_total
+                if servicio.abono > 0:
+                    servicio.saldo_pendiente = servicio.saldo_pendiente - servicio.abono
+            elif servicio.abono > 0:
+                servicio.saldo_pendiente = servicio.saldo_pendiente + servicio.abono
+            
+        servicio.save()
+            
+        return redirect('detalle_servicio', servicio_id=servicio.id)
 
     else:
         print('ingresamos al form vacio de servicio')
@@ -141,24 +145,114 @@ def iniciar_trabajo(request, servicio_id):
         form = IniciarTrabajoForm(request.POST, instance=servicio)
         if form.is_valid():
             orden = form.save(commit=False)
-            if orden.estado_orden.nombre == 'Orden cancelada, espera entregar equipo al cliente':
-                print('ingresa a if de finalizado')
-                servicio.valor_total = servicio.valor_revision
-                if servicio.abono < servicio.valor_total:
+
+            # Paso 1: orden ingresada a espera de revision  
+            if orden.estado_orden.nombre == 'En Espera de Revisión':
+                servicio.saldo_pendiente = (orden.valor_total - orden.abono)
+                orden.save()
+                servicio.save()
+                return redirect('detalle_servicio', servicio_id=servicio.id)
+
+            
+            # Paso 2: En Espera de Confirmación de Reparación
+            elif orden.estado_orden.nombre == 'En Espera de Confirmación de Reparación':
+                if orden.valor_total == servicio.valor_total:
+                    if orden.abono == servicio.abono:
+                        servicio.saldo_pendiente = (orden.valor_total - orden.abono)
+                    else:
+                        servicio.saldo_pendiente = (orden.valor_total - orden.abono)
+                else:
+                    if orden.abono == servicio.abono:
+                        servicio.saldo_pendiente = (orden.valor_total - orden.abono)
+                    else:
+                        servicio.saldo_pendiente = (orden.valor_total - orden.abono)
+                orden.save()
+                servicio.save()
+                return redirect('detalle_servicio', servicio_id=servicio.id)
+           
+
+            # Paso 3: orden cancelada, ingresa a espera de entrega al cliente, se cobra revision
+            elif orden.estado_orden.nombre == 'Orden cancelada, espera entregar equipo al cliente':
+                servicio.saldo_pendiente = servicio.valor_revision
+                servicio.solucion_final = 'El cliente decidió no reparar el equipo, a espera de que recojan el equipo'
+                servicio.fecha_cierre_servicio = datetime.today()
+                orden.save()
+                servicio.save()
+                return redirect('detalle_servicio', servicio_id=servicio.id)
+                
+                
+            # Paso 4: orden cancelada y entregada al cliente
+            elif orden.estado_orden.nombre == 'Orden cancelada, equipo entregado al cliente':
+                if orden.abono < orden.valor_total:
                     messages.warning(request, 'No se puede cerrar la orden de servicio con saldo pendiente por pagar...') 
                     return render(request, 'iniciar_trabajo.html',{'form':form})
-                servicio.solucion_final = 'El cliente decidió no reparar el equipo, la orden queda cerrada'
+                else:
+                    servicio.solucion_final = 'El cliente decidió no reparar el equipo, equipo entregado al cliente'
+                    servicio.fecha_cierre_servicio = datetime.today()
+                    servicio.saldo_pendiente = (servicio.saldo_pendiente - (orden.abono))
+                    orden.save()
+                    servicio.save()
+                    return redirect('detalle_servicio', servicio_id=servicio.id)
+
+            # Paso 5 Orden aprobada para reparación
+            elif orden.estado_orden.nombre == 'Orden aprobada para reparación':
+                servicio.saldo_pendiente = orden.valor_total - orden.abono
+                servicio.save()
+                orden.save()
+                return redirect('detalle_servicio', servicio_id=servicio.id)
+
+
+            # Paso 6: Orden a la espera de repuestos
+            elif orden.estado_orden.nombre == 'Orden a la espera de repuestos':
+                servicio.saldo_pendiente = orden.valor_total - orden.abono
+                orden.save()
+                servicio.save()
+                return redirect('detalle_servicio', servicio_id=servicio.id)
+
+            # Paso 7: Orden reparada, espera entrega al cliente
+            elif orden.estado_orden.nombre == 'Orden reparada, espera entrega al cliente':
+                servicio.saldo_pendiente = orden.valor_total - orden.abono
                 servicio.fecha_cierre_servicio = datetime.today()
+                servicio.save()
+                orden.save()
+                return redirect('detalle_servicio', servicio_id=servicio.id)
+
+            # Paso 8: Orden reparada, entregada al cliente
             elif orden.estado_orden.nombre == 'Orden reparada, entregada al cliente':
-                print('ingresa al if de reparado')
-                if servicio.abono < servicio.valor_total:
+                if orden.abono < orden.valor_total:
                     messages.warning(request, 'No se puede cerrar la orden de servicio con saldo pendiente por pagar...') 
                     return render(request, 'iniciar_trabajo.html',{'form':form})
+                else:
+                    servicio.saldo_pendiente = orden.valor_total - orden.abono
+                    servicio.fecha_cierre_servicio = datetime.today()
+                orden.save()
+                servicio.save()
+                return redirect('detalle_servicio', servicio_id=servicio.id)
+
+
+            # Paso 9: Orden no reparada, espera entrega al cliente
+            elif orden.estado_orden.nombre == 'Orden no reparada, espera entrega al cliente':
+                servicio.saldo_pendiente = orden.valor_total - orden.abono
                 servicio.fecha_cierre_servicio = datetime.today()
-            servicio.saldo_pendiente = (orden.valor_total - (servicio.abono))
-            orden.save()
-            servicio.save()
-            return redirect('detalle_servicio', servicio_id=servicio.id)
+                servicio.solucion_final = 'El equipo no se puede reparar, equipo a la espera de ser reclamado por el cliente.'
+                servicio.save()
+                orden.save()
+                return redirect('detalle_servicio', servicio_id=servicio.id)
+
+            # Paso 10: 	Orden no reparada, entregada al cliente
+            elif orden.estado_orden.nombre == 'Orden no reparada, entregada al cliente':
+                if orden.abono < orden.valor_total:
+                    messages.warning(request, 'No se puede cerrar la orden de servicio con saldo pendiente por pagar...') 
+                    return render(request, 'iniciar_trabajo.html',{'form':form})
+                else:
+                    servicio.saldo_pendiente = orden.valor_total - orden.abono
+                    servicio.fecha_cierre_servicio = datetime.today()
+                    servicio.solucion_final = 'El equipo no se puede reparar, equipo entregado al cliente.'
+                orden.save()
+                servicio.save()
+                return redirect('detalle_servicio', servicio_id=servicio.id)      
+          
+                
     else:
         form = IniciarTrabajoForm(instance=servicio)
     return render(request, 'iniciar_trabajo.html', {'form':form})

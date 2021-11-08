@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+<br>
+<div class="row justify-content-center">
+  <div class="col-md-8 align-items-center">
+    <form class="row g-3" method="post">
+        {% csrf_token %}
+        {{userform.as_p}}
+        {{perfilform.as_p}}
+        
+        <div class="col-12">
+          <button class="btn btn-success" type="submit">Crear Registro</button>
+        </div>
+      </form>
+  </div>
+
+</div>
+{% endblock %}
