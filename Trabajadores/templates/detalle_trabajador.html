@@ -5,12 +5,20 @@
 <div class="container">
   <div class="row">
     <div class="col-md">
+      {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
       <div class="card card-body mt-2">
         <h4 class="card-title">Trabajador: {{trabajador.perfil.identificacion}} </h4>
-        <h5>{{trabajador.get_full_name|title}}</h5>
+        <h5 class="text-primary">{{trabajador.get_full_name|title}}</h5>
         {% if trabajador.perfil.biografia %}
-          <p>{{trabajador.perfil.biografia}}</p>
+          <p>Bio: {{trabajador.perfil.biografia}}</p>
         {% endif %}
+        <span class="mb-2">{{trabajador.date_joined}}</span>
         <a href="" class="btn btn-outline-info btn-sm btn-block">Actualizar Trabajador</a>
         <a href="" class="btn btn-outline-danger btn-sm btn-block">Eliminar Trabajador</a>
       </div>
@@ -26,7 +34,13 @@
             <li>{{grupo.name}}</li>
           {% endfor %}
         </ul>
-        
+        <div>Estado:
+          {% if trabajador.is_active %}
+             <span class="text-success"><b>Activo</b></span>
+          {% else %}
+            <span class="text-danger"><b>Inactivo</b></span> 
+          {% endif %}
+        </div>
       </div>
     </div>
     <div class="col-md">

@@ -43,9 +43,9 @@
           <td>{{trabajador.last_name}}</td>
           <td>{{trabajador.email}}</td>
           {% if trabajador.is_active %}
-            <td>Activo</td>
+            <td class="text-success"><b>Activo</b></td>
           {% else %}
-            <td>Inactivo</td>
+            <td class="text-danger"><b>Inactivo</b></td>
           {% endif %}
           <td><a class="btn btn-outline-info" href="{% url 'detalle_trabajador' trabajador.id %}" role="button">Ver</a></td>
         </tr>
