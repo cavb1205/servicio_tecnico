@@ -9,7 +9,7 @@
         <h4 class="card-title">Cliente: {{cliente.identificacion}}</h4>
         <h5>{{cliente.nombres|title}} {{cliente.apellidos|title}}</h5>
         <a href="{% url 'editar_cliente' cliente.id %}" class="btn btn-outline-info btn-sm btn-block">Actualizar Cliente</a>
-        <a href="{% url 'eliminar_cliente' cliente.id %}" class="btn btn-outline-danger btn-sm btn-block">Eliminar Cliente</a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#eliminar_cliente" class="btn btn-outline-danger btn-sm btn-block">Eliminar Cliente</a>
       </div>
     </div>
     <div class="col-md">
@@ -91,6 +91,28 @@
 </div>
 
 
+
+
+
+
+<div class="modal" tabindex="-1" id='eliminar_cliente'>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content ">
+      <div class="modal-header alert alert-danger">
+        <h5 class="modal-title">Eliminar Cliente {{cliente.nombres|title}} {{cliente.apellidos|title}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Estas seguro de eliminar el registro?</p>
+      </div>
+      <div class="modal-footer">
+        <a href="{% url 'eliminar_cliente' cliente.id %}" class="btn btn-danger">Eliminar</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 
    

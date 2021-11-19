@@ -1,6 +1,7 @@
 from django.db import models
 
 from Clientes.models import *
+from Tiendas.models import Tienda
 
 
 
@@ -51,6 +52,7 @@ class Dispositivo(models.Model):
     direccion_mac = models.CharField(max_length=20, blank=True)
     color_dispositivo = models.ForeignKey(Color_Dispositivo, on_delete=models.CASCADE)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    tienda = models.ForeignKey(Tienda, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.modelo_dispositivo) + ' ' + str(self.color_dispositivo) 

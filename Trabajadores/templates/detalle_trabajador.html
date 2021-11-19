@@ -18,9 +18,9 @@
         {% if trabajador.perfil.biografia %}
           <p>Bio: {{trabajador.perfil.biografia}}</p>
         {% endif %}
-        <span class="mb-2">{{trabajador.date_joined}}</span>
-        <a href="" class="btn btn-outline-info btn-sm btn-block">Actualizar Trabajador</a>
-        <a href="" class="btn btn-outline-danger btn-sm btn-block">Eliminar Trabajador</a>
+        <span class="mb-2">Fecha Ingreso: {{trabajador.date_joined}}</span>
+        <a href="{% url 'editar_trabajador' trabajador.id %}" class="btn btn-outline-info btn-sm btn-block">Actualizar Trabajador</a>
+        <a href="{% url 'eliminar_trabajador' trabajador.id %}" class="btn btn-outline-danger btn-sm btn-block" data-bs-toggle="modal" data-bs-target="#eliminar_trabajador">Eliminar Trabajador</a>
       </div>
     </div>
     <div class="col-md">
@@ -86,6 +86,30 @@
 
 
 
+<!-- Modals -->
+<div class="modal" tabindex="-1" id='eliminar_trabajador'>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content ">
+      <div class="modal-header alert alert-danger">
+        <h5 class="modal-title">Eliminar Trabajador {{trabajador.get_full_name|title}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Estas seguro de eliminar el registro?</p>
+      </div>
+      <div class="modal-footer">
+        <a href="{% url 'eliminar_trabajador' trabajador.id %}" class="btn btn-danger">Eliminar</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
 
    
 {% endblock %}
+
+
+
+

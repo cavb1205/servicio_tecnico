@@ -3,6 +3,7 @@ from django.db.models.fields import DecimalField
 from Clientes.models import *
 from Dispositivos.models import *
 from datetime import date
+from Tiendas.models import Tienda
 
 # Create your models here.
 
@@ -31,7 +32,7 @@ class Servicios(models.Model):
     dispositivo = models.ForeignKey(Dispositivo, on_delete=models.CASCADE, null=True)
     fecha_ingreso = models.DateTimeField(default=date.today())
     fecha_entrega_estimada = models.DateField(auto_now=False, auto_now_add=False, blank=True, default=date.today())
-    estado_orden = models.ForeignKey(Estado_Orden, on_delete=models.CASCADE, default=Estado_Orden.objects.get(nombre__icontains='En Espera de Revisión'))
+    estado_orden = models.ForeignKey(Estado_Orden, on_delete=models.CASCADE)
     problema_frecuente = models.ForeignKey(Problemas_Frecuentes, on_delete=models.CASCADE, blank=True, null=True)
     observaciones = models.TextField(max_length=250, blank=True)
     codigo_desbloqueo = models.CharField(max_length=10, blank=True)
@@ -43,6 +44,7 @@ class Servicios(models.Model):
     fecha_cierre_servicio = models.DateTimeField(null=True, blank=True)
     solucion_final = models.TextField(blank=True, null=True)
     tecnico = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    tienda = models.ForeignKey(Tienda, on_delete=models.CASCADE)
 
 
     def __str__(self):

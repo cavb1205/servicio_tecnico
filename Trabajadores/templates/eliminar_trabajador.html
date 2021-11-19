@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+<br>
+<div class="container">
+    <!-- Vertically centered modal 
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="alert alert-danger" role="alert">
+            Estas seguro que deseas eliminar el trabajador {{trabajador.get_full_name|title}} ?
+        </div>
+        <div>
+            <a class="btn btn-danger" href="">ELIMINAR</a>
+        </div>
+    </div>
+
+-->
+
+    <div class="modal" tabindex="-1" id='eliminar_trabajador'>
+        <div class="modal-dialog modal-dialog-centered alert alert-danger">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Eliminar Trabajador {{trabajador.get_full_name|title}}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>

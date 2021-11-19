@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+<br>
+<div class="row justify-content-center">
+  <div class="col-md-8 align-items-center">
+    <form class="row g-3" method="post">
+        {% csrf_token %}
+        <div>
+            <h2>Datos del Administrador</h2>
+            {{adminform.as_p}}
+        </div>
+        <div>
+            <h2>Datos de la Tienda</h2>
+            {{tiendaform.as_p}}
+        </div>
+        
+        
+        <div class="col-12">
+          <button class="btn btn-success" type="submit">Crear Tienda</button>
+        </div>
+      </form>
+  </div>
+
+</div>
+{% endblock %}

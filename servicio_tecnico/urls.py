@@ -22,10 +22,13 @@ from Servicios.views import dashboard
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('tiendas/', include('Tiendas.urls')),
     path('clientes/', include('Clientes.urls')),
     path('trabajadores/', include('Trabajadores.urls')),
     path('dispositivo/', include('Dispositivos.urls')),
     path('servicios/', include('Servicios.urls')),
     path('', dashboard, name='dashboard'),
+    #path('cuentas/', include('django.contrib.auth.urls')),
     
 ]
+

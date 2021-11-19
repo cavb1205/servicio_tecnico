@@ -1,3 +1,4 @@
+from django.contrib.auth import models
 from django.db.models.base import Model
 from django.forms import ModelForm, widgets
 
@@ -5,6 +6,16 @@ from Trabajadores.models import Perfil
 from django.contrib.auth.models import User
 from django import forms
 
+
+class LoginForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ['username','password',]
+        widgets = {
+            'username':forms.TextInput(attrs={'class':'form-control'}),
+            'password':forms.PasswordInput(attrs={'class':'form-control'}),
+        }
+        
 
 
 

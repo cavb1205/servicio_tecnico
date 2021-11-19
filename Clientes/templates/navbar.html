@@ -25,6 +25,13 @@
             <a class="nav-link" href="{% url 'lista_servicios' %}">Ordenes Servicio</a>
           </li>
         </ul>
+        <ul>
+          {% if user.is_authenticated %}
+            <a href="#">Usuario: {{user.get_short_name}}</a>
+          {% else %}
+            <a href="{% url 'login' %}">Login</a>
+          {% endif %}
+        </ul>
       </div>
     </div>
   </nav>
