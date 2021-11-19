@@ -10,15 +10,17 @@ class AdminTiendaForm(ModelForm):
         super(AdminTiendaForm, self).__init__(*args, **kwargs)
         self.fields['first_name'].label = 'Nombres'
         self.fields['last_name'].label = 'Apellidos'
+        self.fields['password'].label = 'Contraseña'
         
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name','email']
+        fields = ['first_name', 'last_name','email','password']
         widgets = {
             'first_name':forms.TextInput(attrs={'class':'form-control'}),
             'last_name':forms.TextInput(attrs={'class':'form-control'}),
-            'email':forms.EmailInput(attrs={'class':'form-control'})
+            'email':forms.EmailInput(attrs={'class':'form-control'}),
+            'password':forms.PasswordInput(attrs={'class':'form-control'})
         }
 
 

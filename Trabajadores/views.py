@@ -1,4 +1,5 @@
 from django.contrib.auth.backends import RemoteUserBackend
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from Servicios.models import Servicios
@@ -25,17 +26,20 @@ def login_view(request):
                 login(request, user)
                 print('ingresa al sistema el usuario')
                 return redirect('dashboard')
-                
             else:
                 messages.warning(request, 'El usuario no existe o no se encuentra activo, por favor verifica los datos de ingreso')
                 return render(request, 'login.html')
-            
-        
-            
         return render(request, 'login.html')
 
 
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
+
+
+
+@login_required
 def lista_trabajadores(request):
     lista_trabajadores = User.objects.all().exclude(is_staff=True).order_by('-is_active')
     total_trabajadores = lista_trabajadores.count()
@@ -48,6 +52,7 @@ def lista_trabajadores(request):
     return render(request, 'trabajadores.html', context)
 
 
+@login_required
 def detalle_trabajador(request, trabajador_id):
     trabajador = User.objects.get(id=trabajador_id)
     servicios = Servicios.objects.filter(tecnico = trabajador.id).order_by('-id')
@@ -58,6 +63,7 @@ def detalle_trabajador(request, trabajador_id):
     return render(request, 'detalle_trabajador.html', context)
 
 
+@login_required
 def crear_trabajador(request):
     if request.method == 'POST':
         userform = TrabajadorForm(request.POST)
@@ -79,6 +85,7 @@ def crear_trabajador(request):
     return render(request, 'trabajador_form.html', {'userform':userform,'perfilform':perfilform})
 
 
+@login_required
 def editar_trabajador(request, trabajador_id):
     trabajador = User.objects.get(id=trabajador_id)
     perfil = Perfil.objects.get(trabajador=trabajador.id)
@@ -100,7 +107,7 @@ def editar_trabajador(request, trabajador_id):
     return render(request, 'trabajador_form.html', {'userform':userform,'perfilform':perfilform})
 
 
-
+@login_required
 def eliminar_trabajador(request,trabajador_id):
     trabajador = User.objects.get(id=trabajador_id)
     perfil = Perfil.objects.filter(trabajador=trabajador.id)

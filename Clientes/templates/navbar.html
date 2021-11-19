@@ -28,8 +28,9 @@
         <ul>
           {% if user.is_authenticated %}
             <a href="#">Usuario: {{user.get_short_name}}</a>
+            <a href="{% url 'logout'%}">Salir</a>
           {% else %}
-            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'login' %}">Ingresar</a>
           {% endif %}
         </ul>
       </div>

@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
 
 # Create your views here.
 
 
+@login_required
 def lista_dispositivos(request):
     '''Lista todos los dispositivos activos'''
 
@@ -15,6 +17,8 @@ def lista_dispositivos(request):
     return render(request, 'lista_dispositivos.html', context)
 
 
+
+@login_required
 def detalle_dispositivo(request, dispositivo_id):
     '''Información detallada del dispositivo'''
 
@@ -27,6 +31,7 @@ def detalle_dispositivo(request, dispositivo_id):
 
 
 
+@login_required
 def crear_dispositivo(request, cliente_id):
     '''Creamos un dispositivo en el sistema'''
     cliente = Cliente.objects.get(pk=cliente_id)
@@ -45,6 +50,7 @@ def crear_dispositivo(request, cliente_id):
 
 
 
+@login_required
 def crear_dispositivo_individual(request):
     '''Creamos un dispositivo en el sistema'''
     
@@ -62,6 +68,7 @@ def crear_dispositivo_individual(request):
     return render(request, 'dispositivo_form.html', {'form':form})
 
 
+@login_required
 def editar_dispositivo(request, dispositivo_id):
 
     dispositivo = Dispositivo.objects.get(pk=dispositivo_id)
@@ -79,7 +86,7 @@ def editar_dispositivo(request, dispositivo_id):
 
 
 
-
+@login_required
 def eliminar_dispositivo(request, dispositivo_id):
     '''Eliminamos un dispositivo'''
 
@@ -93,7 +100,7 @@ def eliminar_dispositivo(request, dispositivo_id):
 
 #vistas para los colores
 
-
+@login_required
 def crear_color(request):
     '''Creamos un color en el sistema'''
     
@@ -110,8 +117,10 @@ def crear_color(request):
     return render(request, 'color_form.html', {'form':form})
 
 
+
 #vistas modelo_dispositivo
 
+@login_required
 def crear_modelo_dispositivo(request):
     '''Creamos un modelo nuevo en el sistema'''
     

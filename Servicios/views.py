@@ -2,6 +2,8 @@ from django.http.response import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
+
 
 from .models import *
 from .forms import *
@@ -11,12 +13,16 @@ from Clientes.models import *
 
 import json
 
+
+
+@login_required
 def lista_servicios(requets):
     lista_servicios = Servicios.objects.all()
     return render(requets, 'lista_servicios.html',{'lista_servicios':lista_servicios})
 
 
 
+@login_required
 def detalle_servicio(request, servicio_id):
     '''Información detallada del servicio'''
 
@@ -28,7 +34,7 @@ def detalle_servicio(request, servicio_id):
     return render(request, 'detalle_servicio.html', context)
 
 
-
+@login_required
 def crear_servicio(request, cliente_id):
     '''Creamos un servicio en el sistema'''
     cliente = Cliente.objects.get(pk=cliente_id)
@@ -59,7 +65,7 @@ def crear_servicio(request, cliente_id):
         
     
 
-
+@login_required
 def editar_servicio(request, servicio_id):
 
     servicio = Servicios.objects.get(pk=servicio_id)
@@ -77,7 +83,7 @@ def editar_servicio(request, servicio_id):
 
 
 
-
+@login_required
 def eliminar_servicio(request, servicio_id):
     '''Eliminamos un servicio'''
 
@@ -87,7 +93,7 @@ def eliminar_servicio(request, servicio_id):
 
 
 
-
+@login_required
 def lista_personas(request):
     if 'term' in request.GET:
         q = Cliente.objects.filter(identificacion__icontains = request.GET.get('term'))
@@ -105,7 +111,7 @@ def lista_personas(request):
             return JsonResponse(nombres, safe=False)
 
 
-
+@login_required
 def buscar_cliente(request):
     if request.method == 'POST':
         print('ingresamos al meth post de buscar cliente e imprimimos')
@@ -138,7 +144,7 @@ def buscar_cliente(request):
 
   
 
-
+@login_required
 def iniciar_trabajo(request, servicio_id):
     servicio = Servicios.objects.get(pk=servicio_id)
     if request.method == 'POST':
@@ -258,7 +264,7 @@ def iniciar_trabajo(request, servicio_id):
     return render(request, 'iniciar_trabajo.html', {'form':form})
 
 
-
+@login_required
 def ordenes_listas_para_reparar(request):
     lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden aprobada para reparación')
     total_ordenes = lista_ordenes.count()
@@ -270,6 +276,8 @@ def ordenes_listas_para_reparar(request):
     }
     return render(request, 'lista_ordenes.html', context)
 
+
+@login_required
 def ordenes_espera_revision(request):
     lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Revisión')
     total_ordenes = lista_ordenes.count()
@@ -282,6 +290,7 @@ def ordenes_espera_revision(request):
     return render(request, 'lista_ordenes.html', context)
 
 
+@login_required
 def ordenes_espera_confirmar_reparaion(request):
        lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Confirmación de Reparación')
        total_ordenes = lista_ordenes.count()
@@ -294,6 +303,7 @@ def ordenes_espera_confirmar_reparaion(request):
        return render(request, 'lista_ordenes.html', context)
 
 
+@login_required
 def ordenes_espera_repuestos(request):
        lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden a la espera de repuestos')
        total_ordenes = lista_ordenes.count()
@@ -306,6 +316,7 @@ def ordenes_espera_repuestos(request):
        return render(request, 'lista_ordenes.html', context)
 
 
+@login_required
 def ordenes_listas_entrega(request):
        lista_ordenes_canceladas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden cancelada, espera entregar equipo al cliente')
        lista_ordenes_no_reparadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden no reparada, espera entrega al cliente')
@@ -323,6 +334,7 @@ def ordenes_listas_entrega(request):
        return render(request, 'lista_ordenes_entregar.html', context)
 
 
+@login_required
 def ordenes_canceladas(request):
        ordenes_canceladas_entregadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden cancelada, equipo entregado al cliente')
        ordenes_no_reparadas_entregadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden no reparada, entregada al cliente')
@@ -337,6 +349,7 @@ def ordenes_canceladas(request):
        return render(request, 'lista_ordenes_canceladas.html', context)
 
 
+@login_required
 def ordenes_reparadas(request):
        lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden reparada, entregada al cliente')
        total_ordenes = lista_ordenes.count()
@@ -350,7 +363,7 @@ def ordenes_reparadas(request):
 
 
 
-
+@login_required
 def dashboard(request):
     ##consultas de ordenes a la bd
     

@@ -8,11 +8,11 @@ from django.db import models
 from django.db.models.base import Model
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 
 
-
-    
+@login_required 
 def lista_clientes(request):
     '''Lista todos los clientes activos'''
 
@@ -24,7 +24,7 @@ def lista_clientes(request):
     }
     return render(request, 'lista_clientes.html', context)
 
-
+@login_required
 def detalle_cliente(request, cliente_id):
     '''Información detallada del cliente'''
 
@@ -42,7 +42,7 @@ def detalle_cliente(request, cliente_id):
     return render(request, 'detalle_cliente.html', context)
 
 
-
+@login_required
 def crear_cliente(request):
     '''Creamos un cliente en el sistema'''
     
@@ -58,7 +58,7 @@ def crear_cliente(request):
         form = ClienteForm()
     return render(request, 'cliente_form.html', {'form':form})
 
-
+@login_required
 def crear_cliente_servicio(request):
     '''Creamos un cliente en el sistema'''
     
@@ -74,7 +74,7 @@ def crear_cliente_servicio(request):
         form = ClienteForm()
     return render(request, 'cliente_form.html', {'form':form})
 
-
+@login_required
 def editar_cliente(request, cliente_id):
 
     cliente = Cliente.objects.get(pk=cliente_id)
@@ -92,7 +92,7 @@ def editar_cliente(request, cliente_id):
 
 
 
-
+@login_required
 def eliminar_cliente(request, cliente_id):
     '''Eliminamos un cliente'''
 
