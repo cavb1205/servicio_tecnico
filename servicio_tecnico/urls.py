@@ -17,7 +17,6 @@ from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
 
-from Servicios.views import dashboard
 
 
 urlpatterns = [
@@ -27,8 +26,7 @@ urlpatterns = [
     path('trabajadores/', include('Trabajadores.urls')),
     path('dispositivo/', include('Dispositivos.urls')),
     path('servicios/', include('Servicios.urls')),
-    path('', dashboard, name='dashboard'),
-    #path('cuentas/', include('django.contrib.auth.urls')),
+    
     
 ]
 

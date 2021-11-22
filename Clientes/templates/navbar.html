@@ -24,15 +24,20 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'lista_servicios' %}">Ordenes Servicio</a>
           </li>
+         
         </ul>
-        <ul>
-          {% if user.is_authenticated %}
-            <a href="#">Usuario: {{user.get_short_name}}</a>
-            <a href="{% url 'logout'%}">Salir</a>
-          {% else %}
-            <a href="{% url 'login' %}">Ingresar</a>
-          {% endif %}
-        </ul>
+       
+        
+          
+        
+      </div>
+      <div class="d-flex pull-right me-10">
+        {% if user.is_authenticated %}
+        <a style="text-decoration:none" class="link-light  m-2" href="#"><i class="bi bi-person-circle"> </i> {{user.get_short_name|title}}</a>
+        <a style="text-decoration:none" class="link-light m-2 " href="{% url 'logout'%}"><i class="bi bi-box-arrow-right"></i></a>
+        {% else %}
+        <a style="text-decoration:none" class="link-light m-2" href="{% url 'login' %}">Ingresar</a>
+        {% endif %}
       </div>
     </div>
   </nav>

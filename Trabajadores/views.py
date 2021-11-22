@@ -2,10 +2,14 @@ from django.contrib.auth.backends import RemoteUserBackend
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.contrib import messages
+
+from django.urls import reverse
 from Servicios.models import Servicios
 from Trabajadores.models import Perfil
-from .forms import TrabajadorForm, PerfilForm, LoginForm
-from django.contrib import messages
+from .forms import TrabajadorForm, PerfilForm
+
+from Tiendas.models import Tienda
 
 
 from django.contrib.auth import authenticate, login, logout
@@ -24,8 +28,9 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                print('ingresa al sistema el usuario')
-                return redirect('dashboard')
+                t = user.perfil.tienda
+                
+                return redirect('detalle_tienda', tienda_id=t.id )
             else:
                 messages.warning(request, 'El usuario no existe o no se encuentra activo, por favor verifica los datos de ingreso')
                 return render(request, 'login.html')
@@ -41,7 +46,12 @@ def logout_view(request):
 
 @login_required
 def lista_trabajadores(request):
-    lista_trabajadores = User.objects.all().exclude(is_staff=True).order_by('-is_active')
+    tienda = request.user.perfil.tienda.id
+    print(tienda)
+    trabajadores = Perfil.objects.filter(tienda=tienda)
+    print(trabajadores)
+    
+    lista_trabajadores = User.objects.filter(perfil__tienda = tienda).exclude(is_staff=True).order_by('-is_active')
     total_trabajadores = lista_trabajadores.count()
     for x in lista_trabajadores:
         print(x.groups.all())
@@ -65,13 +75,15 @@ def detalle_trabajador(request, trabajador_id):
 
 @login_required
 def crear_trabajador(request):
+    tienda = request.user.perfil.tienda
+    
     if request.method == 'POST':
         userform = TrabajadorForm(request.POST)
         perfilform = PerfilForm(request.POST)
         if userform.is_valid() and perfilform.is_valid():
             p = perfilform.save(commit=False)
             usuario = userform.save()
-            perfil = Perfil.objects.create(trabajador=usuario, identificacion = p.identificacion, biografia = p.biografia, telefono = p.telefono)
+            perfil = Perfil.objects.create(trabajador=usuario, identificacion = p.identificacion, biografia = p.biografia, telefono = p.telefono, tienda=tienda)
             usuario.save()
             perfil.save()
             messages.success(request, 'Trabajador creado con éxito.') 

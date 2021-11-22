@@ -1,3 +1,4 @@
+from django.http import request
 from django.http.response import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
@@ -17,8 +18,14 @@ import json
 
 @login_required
 def lista_servicios(requets):
-    lista_servicios = Servicios.objects.all()
-    return render(requets, 'lista_servicios.html',{'lista_servicios':lista_servicios})
+
+    lista_servicios = Servicios.objects.filter(tienda=requets.user.perfil.tienda.id).order_by('-id')
+    total_servicios = lista_servicios.count()
+    context = {
+        'lista_servicios':lista_servicios,
+        'total_servicios':total_servicios,
+    }
+    return render(requets, 'lista_servicios.html',context)
 
 
 
@@ -38,7 +45,7 @@ def detalle_servicio(request, servicio_id):
 def crear_servicio(request, cliente_id):
     '''Creamos un servicio en el sistema'''
     cliente = Cliente.objects.get(pk=cliente_id)
-    dispositivos_cliente = Dispositivo.objects.filter(cliente=cliente.id)
+    
     print(cliente)
     if request.method == 'POST':
         print('ingresamos al meth post de crear servicio e imprimimos')
@@ -52,8 +59,9 @@ def crear_servicio(request, cliente_id):
                     servicio.saldo_pendiente = servicio.saldo_pendiente - servicio.abono
             elif servicio.abono > 0:
                 servicio.saldo_pendiente = servicio.saldo_pendiente + servicio.abono
-            
-        servicio.save()
+            servicio.estado_orden = Estado_Orden.objects.get(nombre__icontains = 'En Espera de Revisión')
+            servicio.tienda = request.user.perfil.tienda
+            servicio.save()
             
         return redirect('detalle_servicio', servicio_id=servicio.id)
 
@@ -96,8 +104,8 @@ def eliminar_servicio(request, servicio_id):
 @login_required
 def lista_personas(request):
     if 'term' in request.GET:
-        q = Cliente.objects.filter(identificacion__icontains = request.GET.get('term'))
-        q_n = Cliente.objects.filter(nombres__icontains = request.GET.get('term'))
+        q = Cliente.objects.filter(identificacion__icontains = request.GET.get('term')).filter(tienda=request.user.perfil.tienda.id)
+        q_n = Cliente.objects.filter(nombres__icontains = request.GET.get('term')).filter(tienda=request.user.perfil.tienda.id)
         identificaciones = list()
         nombres = list()
         if q:
@@ -266,7 +274,7 @@ def iniciar_trabajo(request, servicio_id):
 
 @login_required
 def ordenes_listas_para_reparar(request):
-    lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden aprobada para reparación')
+    lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden aprobada para reparación').filter(tienda=request.user.perfil.tienda.id)
     total_ordenes = lista_ordenes.count()
     nombre_lista = 'Ordenes Listas Para Reparación'
     context = {
@@ -279,7 +287,7 @@ def ordenes_listas_para_reparar(request):
 
 @login_required
 def ordenes_espera_revision(request):
-    lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Revisión')
+    lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Revisión').filter(tienda=request.user.perfil.tienda.id)
     total_ordenes = lista_ordenes.count()
     nombre_lista = 'Ordenes en espera de revisión'
     context = {
@@ -292,7 +300,7 @@ def ordenes_espera_revision(request):
 
 @login_required
 def ordenes_espera_confirmar_reparaion(request):
-       lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Confirmación de Reparación')
+       lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Confirmación de Reparación').filter(tienda=request.user.perfil.tienda.id)
        total_ordenes = lista_ordenes.count()
        nombre_lista = 'Ordenes en confirmar reparación'
        context = {
@@ -305,7 +313,7 @@ def ordenes_espera_confirmar_reparaion(request):
 
 @login_required
 def ordenes_espera_repuestos(request):
-       lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden a la espera de repuestos')
+       lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden a la espera de repuestos').filter(tienda=request.user.perfil.tienda.id)
        total_ordenes = lista_ordenes.count()
        nombre_lista = 'Ordenes en espera de repuestos'
        context = {
@@ -318,9 +326,9 @@ def ordenes_espera_repuestos(request):
 
 @login_required
 def ordenes_listas_entrega(request):
-       lista_ordenes_canceladas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden cancelada, espera entregar equipo al cliente')
-       lista_ordenes_no_reparadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden no reparada, espera entrega al cliente')
-       lista_ordenes_reparadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden reparada, espera entrega al cliente')
+       lista_ordenes_canceladas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden cancelada, espera entregar equipo al cliente').filter(tienda=request.user.perfil.tienda.id)
+       lista_ordenes_no_reparadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden no reparada, espera entrega al cliente').filter(tienda=request.user.perfil.tienda.id)
+       lista_ordenes_reparadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden reparada, espera entrega al cliente').filter(tienda=request.user.perfil.tienda.id)
        
        total_ordenes = lista_ordenes_canceladas.count() + lista_ordenes_no_reparadas.count() + lista_ordenes_reparadas.count()
        nombre_lista = 'Ordenes listas para entrega al cliente'
@@ -336,8 +344,8 @@ def ordenes_listas_entrega(request):
 
 @login_required
 def ordenes_canceladas(request):
-       ordenes_canceladas_entregadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden cancelada, equipo entregado al cliente')
-       ordenes_no_reparadas_entregadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden no reparada, entregada al cliente')
+       ordenes_canceladas_entregadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden cancelada, equipo entregado al cliente').filter(tienda=request.user.perfil.tienda.id)
+       ordenes_no_reparadas_entregadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden no reparada, entregada al cliente').filter(tienda=request.user.perfil.tienda.id)
        total_ordenes = ordenes_canceladas_entregadas.count() + ordenes_no_reparadas_entregadas.count()
        nombre_lista = 'Ordenes canceladas o no reparadas'
        context = {
@@ -351,7 +359,7 @@ def ordenes_canceladas(request):
 
 @login_required
 def ordenes_reparadas(request):
-       lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden reparada, entregada al cliente')
+       lista_ordenes = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden reparada, entregada al cliente').filter(tienda=request.user.perfil.tienda.id)
        total_ordenes = lista_ordenes.count()
        nombre_lista = 'Ordenes Reparadas'
        context = {
@@ -363,115 +371,3 @@ def ordenes_reparadas(request):
 
 
 
-@login_required
-def dashboard(request):
-    ##consultas de ordenes a la bd
-    
-    ordenes_espera_revision = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Revisión')
-    ordenes_espera_confirmar_reparacion = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Confirmación de Reparación')
-    ordenes_canceladas_espera_entrega = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden cancelada, espera entregar equipo al cliente')
-    ordenes_canceladas_entregadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden cancelada, equipo entregado al cliente')
-    ordenes_aprobadas_reparacion = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden aprobada para reparación')
-    ordenes_espera_repuestos = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden a la espera de repuestos')
-    ordenes_reparadas_espera_entrega = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden reparada, espera entrega al cliente')
-    ordenes_reparadas_entregadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden reparada, entregada al cliente')
-    ordenes_no_reparadas_espera_entrega = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden no reparada, espera entrega al cliente')
-    ordenes_no_reparadas_entregadas = Servicios.objects.filter(estado_orden__nombre__icontains = 'Orden no reparada, entregada al cliente')
-    
-    clientes = Cliente.objects.all().order_by('-id')
-
-    
-    #totales
-    total_clientes = clientes.count()
-    total_ordenes_servicio = Servicios.objects.all().count()
-    total_ordenes_espera_revision = ordenes_espera_revision.count()
-    total_ordenes_espera_confirmar_reparacion = ordenes_espera_confirmar_reparacion.count()
-    total_ordenes_canceladas_espera_entrega = ordenes_canceladas_espera_entrega.count()
-    total_ordenes_canceladas_entregadas = ordenes_canceladas_entregadas.count()
-    total_ordenes_aprobadas_reparacion = ordenes_aprobadas_reparacion.count()
-    total_ordenes_espera_repuestos = ordenes_espera_repuestos.count()
-    total_ordenes_reparadas_espera_entrega = ordenes_reparadas_espera_entrega.count()
-    total_ordenes_reparadas_entregadas = ordenes_reparadas_entregadas.count()
-    total_ordenes_no_reparadas_espera_entrega = ordenes_no_reparadas_espera_entrega.count()
-    total_ordenes_no_reparadas_entregadas = ordenes_no_reparadas_entregadas.count()
-    total_ordenes_por_entregar = total_ordenes_no_reparadas_espera_entrega + total_ordenes_reparadas_espera_entrega + total_ordenes_canceladas_espera_entrega
-    total_ordenes_canceladas = total_ordenes_canceladas_entregadas + total_ordenes_no_reparadas_entregadas
-
-    #clientes pendientes para entregar equipos
-    ordenes_pendientes = Servicios.objects.all().exclude(estado_orden__nombre__icontains = 'En Espera de Revisión').exclude(estado_orden__nombre__icontains = 'En Espera de Confirmación de Reparación').exclude(estado_orden__nombre__icontains = 'Orden cancelada, equipo entregado al cliente').exclude(estado_orden__nombre__icontains = 'Orden aprobada para reparación').exclude(estado_orden__nombre__icontains = 'Orden a la espera de repuestos').exclude(estado_orden__nombre__icontains = 'Orden reparada, entregada al cliente').exclude(estado_orden__nombre__icontains = 'Orden no reparada, entregada al cliente')
-    clientes_ordenes_pendientes = []
-    for orden in ordenes_pendientes:
-        clientes_ordenes_pendientes.append(clientes.get(id=orden.cliente.id))
-
-    total_clientes_ordenes_pendientes = len(clientes_ordenes_pendientes)
-
-
-    #calcular ingresos del dia
-    hoy = datetime.now()
-    hoy = hoy.strftime("%y-%m-%d")
-    ingresos_hoy = ordenes_reparadas_entregadas.filter(fecha_cierre_servicio__icontains = hoy)
-    total_ingresos_dia = 0
-    for orden in ingresos_hoy:
-        print('ingresa al if')
-        total_ingresos_dia = total_ingresos_dia + orden.valor_total
-        
-
-    #calcular ingresos de la semana
-    semana = datetime.now().isocalendar()[1]
-    total_ingresos_semana = 0
-    for orden in ordenes_reparadas_entregadas:
-        if orden.fecha_cierre_servicio.isocalendar()[1] == semana:
-            print('ingresa al if de la semana')
-            total_ingresos_semana = total_ingresos_semana + orden.valor_total
-            
-    #calcula ingresos del mes
-    mes = datetime.now()
-    mes = mes.strftime("%m")
-    total_ingresos_mes = 0
-    for orden in ordenes_reparadas_entregadas:
-        if orden.fecha_cierre_servicio.strftime("%m") == mes:
-            total_ingresos_mes = total_ingresos_mes + orden.valor_total
-
-    #calcular ingresos del año
-    ano = datetime.now().strftime("%y")
-    total_ingresos_ano = 0
-    for orden in ordenes_reparadas_entregadas:
-        if orden.fecha_cierre_servicio.strftime('%y') == ano:
-            total_ingresos_ano = total_ingresos_ano + orden.valor_total
-
-
-
-    context = {
-        
-        'total_clientes':total_clientes,
-        'total_ordenes_servicio':total_ordenes_servicio,
-        'total_ordenes_espera_revision':total_ordenes_espera_revision,
-        'total_ordenes_espera_confirmar_reparacion':total_ordenes_espera_confirmar_reparacion,
-        'total_ordenes_canceladas_espera_entrega':total_ordenes_canceladas_espera_entrega,
-        'total_ordenes_canceladas_entregadas':total_ordenes_canceladas_entregadas,
-        'total_ordenes_aprobadas_reparacion':total_ordenes_aprobadas_reparacion,
-        'total_ordenes_espera_repuestos':total_ordenes_espera_repuestos,
-        'total_ordenes_reparadas_espera_entrega':total_ordenes_reparadas_espera_entrega,
-        'total_ordenes_reparadas_entregadas':total_ordenes_reparadas_entregadas,
-        'total_ordenes_no_reparadas_espera_entrega':total_ordenes_no_reparadas_espera_entrega,
-        'total_ordenes_no_reparadas_entregadas':total_ordenes_no_reparadas_entregadas,
-        'total_ordenes_por_entregar':total_ordenes_por_entregar,
-        'total_ordenes_canceladas':total_ordenes_canceladas,
-
-
-        'clientes_ordenes_pendientes':clientes_ordenes_pendientes,
-        'total_clientes_ordenes_pendientes':total_clientes_ordenes_pendientes,
-
-      
-
-        #ingresos
-        'total_ingresos_dia':total_ingresos_dia,
-        'total_ingresos_semana':total_ingresos_semana,
-        'total_ingresos_mes':total_ingresos_mes,
-        'total_ingresos_ano':total_ingresos_ano,
-
-
-
-    }
-
-    return render(request,'dashboard.html', context)

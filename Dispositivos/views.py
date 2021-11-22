@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
+from Clientes.models import Cliente
 
 # Create your views here.
 
@@ -9,10 +10,12 @@ from .forms import *
 @login_required
 def lista_dispositivos(request):
     '''Lista todos los dispositivos activos'''
-
-    lista_dispositivos = Dispositivo.objects.all()
+    tienda = request.user.perfil.tienda
+    lista_dispositivos = Dispositivo.objects.filter(tienda=tienda)
+    total_dispositivos = lista_dispositivos.count()
     context = {
-        'lista_dispositivos':lista_dispositivos
+        'lista_dispositivos':lista_dispositivos,
+        'total_dispositivos':total_dispositivos,
     }
     return render(request, 'lista_dispositivos.html', context)
 
@@ -34,17 +37,22 @@ def detalle_dispositivo(request, dispositivo_id):
 @login_required
 def crear_dispositivo(request, cliente_id):
     '''Creamos un dispositivo en el sistema'''
-    cliente = Cliente.objects.get(pk=cliente_id)
+    print('ingresa al crear dispositivo cliente_id = ', cliente_id )
+    cliente = Cliente.objects.get(id=cliente_id)
+    print(cliente)
     if request.method == 'POST':
-        form = DispositivoForm(cliente, request.POST)
+        form = DispositivoForm( request.POST)
         
         if form.is_valid():
-            dispositivo = form.save()
+            dispositivo = form.save(commit=False)
+            dispositivo.tienda = request.user.perfil.tienda
+            dispositivo.cliente = cliente
+            dispositivo.save()
             print(dispositivo.id)
             return redirect('crear_servicio', cliente_id=cliente.id)
 
     else:
-        form = DispositivoForm(cliente)
+        form = DispositivoForm()
         print(form)
     return render(request, 'dispositivo_form.html', {'form':form})
 
@@ -53,33 +61,39 @@ def crear_dispositivo(request, cliente_id):
 @login_required
 def crear_dispositivo_individual(request):
     '''Creamos un dispositivo en el sistema'''
-    
+    tienda = request.user.perfil.tienda
     if request.method == 'POST':
-        form = DispositivoIndividualForm(request.POST)
-        
+        form = DispositivoIndividualForm(tienda, request.POST)
+        print('antes del valid')
         if form.is_valid():
-            dispositivo = form.save()
+
+            dispositivo = form.save(commit=False)
+            print('ingresa al valid y es commit false')
+            dispositivo.tienda = tienda
             print(dispositivo.id)
+            print(dispositivo.cliente)
+            dispositivo.save()
             return redirect('detalle_dispositivo', dispositivo_id=dispositivo.id)
 
     else:
-        form = DispositivoIndividualForm()
+        form = DispositivoIndividualForm(tienda)
         
     return render(request, 'dispositivo_form.html', {'form':form})
 
 
 @login_required
 def editar_dispositivo(request, dispositivo_id):
+    tienda = request.user.perfil.tienda
 
     dispositivo = Dispositivo.objects.get(pk=dispositivo_id)
     if request.method == 'POST':
-        form = DispositivoForm(request.POST, instance=dispositivo)
+        form = DispositivoForm(tienda,request.POST, instance=dispositivo)
         if form.is_valid():
             dispositivo = form.save(commit=False)
             dispositivo.save()
             return redirect('detalle_dispositivo', dispositivo_id=dispositivo.id)
     else:
-        form = DispositivoForm(instance=dispositivo)
+        form = DispositivoForm(tienda,instance=dispositivo)
         print(form)
     return render(request, 'editar_dispositivo_form.html', {'form':form})
 

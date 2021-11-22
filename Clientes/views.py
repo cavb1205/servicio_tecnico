@@ -1,3 +1,4 @@
+from Trabajadores.models import Perfil
 from .forms import ClienteForm, ClienteEditForm
 from .models import Cliente
 
@@ -15,8 +16,9 @@ from django.contrib.auth.decorators import login_required
 @login_required 
 def lista_clientes(request):
     '''Lista todos los clientes activos'''
-
-    lista_clientes = Cliente.objects.all()
+    tienda = request.user.perfil.tienda
+   
+    lista_clientes = Cliente.objects.filter(tienda=tienda.id)
     total_clientes = lista_clientes.count()
     context = {
         'lista_clientes':lista_clientes,
@@ -45,13 +47,15 @@ def detalle_cliente(request, cliente_id):
 @login_required
 def crear_cliente(request):
     '''Creamos un cliente en el sistema'''
-    
+    tienda = request.user.perfil.tienda
     if request.method == 'POST':
         form = ClienteForm(request.POST)
         
         if form.is_valid():
-            cliente = form.save()
-            print(cliente.id)
+            cliente = form.save(commit=False)
+            cliente.tienda = tienda
+            cliente.save()
+            
             return redirect('detalle_cliente', cliente_id=cliente.id)
 
     else:
@@ -66,7 +70,9 @@ def crear_cliente_servicio(request):
         form = ClienteForm(request.POST)
         
         if form.is_valid():
-            cliente = form.save()
+            cliente = form.save(commit=False)
+            cliente.tienda = request.user.perfil.tienda
+            cliente.save()
             print(cliente.id)
             return redirect('crear_servicio', cliente_id=cliente.id)
 
