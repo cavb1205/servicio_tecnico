@@ -4,7 +4,7 @@ from .models import *
 from .forms import *
 from Clientes.models import Cliente
 
-# Create your views here.
+from django.contrib import messages
 
 
 @login_required
@@ -32,6 +32,20 @@ def detalle_dispositivo(request, dispositivo_id):
     }
     return render(request, 'detalle_dispositivo.html', context)
 
+
+
+@login_required
+def crear_marca(request):
+    if request.method == 'POST':
+        form = MarcaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Marca agregada con éxito.')
+            return redirect('lista_dispositivos')
+    else:
+        form = MarcaForm()
+    return render(request, 'marca_form.html', {'form':form})
+        
 
 
 @login_required

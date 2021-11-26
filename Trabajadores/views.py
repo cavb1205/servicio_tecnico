@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.urls import reverse
 from Servicios.models import Servicios
 from Trabajadores.models import Perfil
-from .forms import TrabajadorForm, PerfilForm
+from .forms import TrabajadorForm, PerfilForm, PasswordForm
 
 from Tiendas.models import Tienda
 
@@ -21,16 +21,22 @@ def login_view(request):
         return redirect('dashboard')
     else:
         if request.method == 'POST':
-            #form = LoginForm(request.POST)
+            
             print('ingresa a method post')
             username = request.POST.get('username')
             password = request.POST.get('password')
             user = authenticate(request, username=username, password=password)
             if user is not None:
-                login(request, user)
                 t = user.perfil.tienda
-                
-                return redirect('detalle_tienda', tienda_id=t.id )
+                tienda = Tienda.objects.get(id=t.id)
+                if tienda.estado == True:
+                    login(request, user)
+                    
+                    return redirect('detalle_tienda', tienda_id=t.id )
+                else:
+                    print('ingresa al else de la tienda desactivada')
+                    messages.warning(request, 'La tienda ' + tienda.nombre + ' se encuentra desactivada, por favor contacta a soporte para activarla.')
+                    return render(request,'login.html')
             else:
                 messages.warning(request, 'El usuario no existe o no se encuentra activo, por favor verifica los datos de ingreso')
                 return render(request, 'login.html')
@@ -118,6 +124,25 @@ def editar_trabajador(request, trabajador_id):
         perfilform = PerfilForm(instance=perfil)
     return render(request, 'trabajador_form.html', {'userform':userform,'perfilform':perfilform})
 
+
+
+@login_required
+def cambiar_password(request, trabajador_id):
+    trabajador = User.objects.get(id=trabajador_id)
+    if request.method == 'POST':
+        form = PasswordForm(request.POST)
+        if form.is_valid():
+
+            trabajador.set_password(request.POST.get('password'))
+            trabajador.save()
+            messages.success(request, 'Contraseña actualizada con éxito.')
+            return redirect('detalle_trabajador', trabajador.id)
+        else:
+            messages.error(request, 'La contraseña no cumple con las condiciones mínimas.')
+            return redirect('detalle_trabajador', trabajador.id)
+    else:
+        form = PasswordForm()
+    return render(request,'password.html',{'form':form})
 
 @login_required
 def eliminar_trabajador(request,trabajador_id):

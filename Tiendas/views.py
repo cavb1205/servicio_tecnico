@@ -43,7 +43,39 @@ def crear_tienda(request):
         }
     return render(request, 'tienda_form.html', context)
 
-        
+
+
+@login_required
+def editar_tienda(request, tienda_id):
+    tienda = Tienda.objects.get(id=tienda_id)
+    if request.method == 'POST':
+        form = TiendaForm(request.POST, instance=tienda)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Tienda actualizada con éxito.')
+            return redirect('perfil_tienda_detalle', tienda.id)
+
+    else:
+        form = TiendaForm(instance=tienda)
+    return render(request, 'editar_tienda_form.html',{'form':form})
+
+
+
+@login_required
+def perfil(request):
+    tienda_id = request.user.perfil.tienda.id
+    return redirect('perfil_tienda_detalle', tienda_id)
+
+@login_required
+def perfil_tienda(request, tienda_id):
+    tienda = Tienda.objects.get(id=request.user.perfil.tienda.id)
+    context = {
+        'tienda':tienda,
+    }
+    return render(request, 'perfil_tienda.html', context)
+
+
+@login_required        
 def tienda(request):
     usuario = request.user
     tienda = usuario.perfil.tienda
@@ -56,6 +88,8 @@ def detalle_tienda(request, tienda_id ):
     ##consultas de ordenes a la bd
     print('ingresa a la tienda id')
     print(tienda_id)
+
+    tienda = Tienda.objects.get(id=request.user.perfil.tienda.id)
 
     ordenes_espera_revision = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Revisión').filter(tienda=tienda_id)
     ordenes_espera_confirmar_reparacion = Servicios.objects.filter(estado_orden__nombre__icontains = 'En Espera de Confirmación de Reparación').filter(tienda=tienda_id)
@@ -133,6 +167,8 @@ def detalle_tienda(request, tienda_id ):
 
     context = {
         
+        'tienda':tienda,
+
         'total_clientes':total_clientes,
         'total_ordenes_servicio':total_ordenes_servicio,
         'total_ordenes_espera_revision':total_ordenes_espera_revision,

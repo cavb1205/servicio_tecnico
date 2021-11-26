@@ -1,0 +1,19 @@
+                <h1><b>{{servicio.tienda.nombre|title}}</b></h1>
+                <h6><b>Orden #:</b> {{servicio.id}}</h6>
+                <h6><b>Fecha Ingreso: </b>{{servicio.fecha_ingreso}}</h6>
+                <h6>---------------</h6>
+                <b>Cliente:</b> {{servicio.cliente.identificacion}}
+                {{servicio.cliente.nombres}}
+                {{servicio.cliente.apellidos}}
+                <h6>---------------</h6>
+                <h6><b>Dispositivo</b></h6>
+                <h6><b>Marca:</b>{{servicio.dispositivo.marca}}</h6>
+                <h6><b>Modelo:</b>{{servicio.dispositivo.modelo_dispositivo}}</h6>
+                <h6><b>Observaciones:</b> {{servicio.observaciones}}</h6>
+                <h6>---------------</h6>
+                <h6><b>Problema:</b> {{servicio.problema_frecuente}}</h6>
+                <h6><b>Valor Revisión:</b> {{servicio.valor_revision}}</h6>
+                <h6><b>Valor Abono:</b> {{servicio.abono}}</h6>
+                <h6><b>Fecha Entrega: </b>{{servicio.fecha_entrega_estimada}}</h6>
+                <button class="btn btn-light" type="button" onclick="javascript:window.print()">Imprimir</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

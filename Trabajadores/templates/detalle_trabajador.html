@@ -20,7 +20,10 @@
         {% endif %}
         <span class="mb-2">Fecha Ingreso: {{trabajador.date_joined}}</span>
         <a href="{% url 'editar_trabajador' trabajador.id %}" class="btn btn-outline-info btn-sm btn-block">Actualizar Trabajador</a>
-        <a href="{% url 'eliminar_trabajador' trabajador.id %}" class="btn btn-outline-danger btn-sm btn-block" data-bs-toggle="modal" data-bs-target="#eliminar_trabajador">Eliminar Trabajador</a>
+        <a href="{% url 'eliminar_trabajador' trabajador.id %}" class="btn btn-outline-danger btn-sm btn-block mt-1" data-bs-toggle="modal" data-bs-target="#eliminar_trabajador">Eliminar Trabajador</a>
+        {% if request.user.perfil.identificacion == trabajador.perfil.identificacion %}
+          <a href="#" class="btn btn-outline-dark btn-sm btn-block mt-1" data-bs-toggle="modal" data-bs-target="#actualizar_password">Cambiar Contraseña</a>
+        {% endif %}
       </div>
     </div>
     <div class="col-md">
@@ -106,6 +109,26 @@
   </div>
 </div>
 
+
+<!--Modal password-->
+<div class="modal" tabindex="-1" id='actualizar_password'>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content ">
+      <div class="modal-header alert alert-warning">
+        <h5 class="modal-title">Cambiar Contraseña del Trabajador {{trabajador.get_full_name|title}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Estas seguro de cambiar la contraseña?</p>
+      </div>
+      <div class="modal-footer">
+        <a href="{% url 'editar_password' trabajador.id %}" class="btn btn-danger">Cambiar Contraseña</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
    
 {% endblock %}

@@ -3,7 +3,15 @@
 {% block contenido %}
 <br>
 <div class="container">
-
+<div>
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <p{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</p>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
 
 <div class="row">
   <div class="col-md">
@@ -15,9 +23,9 @@
     
       <div class="card card-body">
         <div class="text-center card-title">Acciones Disponibles</div>
-        <a class="btn btn-outline-success btn-sm btn-block" href="{% url 'crear_dispositivo_individual' %}" role="button">Crear Dispositivo</a> <br>
-        <a class="btn btn-outline-success btn-sm btn-block" href="{% url 'crear_color' %}" role="button">Agregar Color</a> <br>
-        <a class="btn btn-outline-success btn-sm btn-block" href="{% url 'crear_modelo_dispositivo' %}" role="button">Agregar Modelo</a>
+        <a class="btn btn-outline-success btn-sm btn-block mb-1" href="{% url 'crear_dispositivo_individual' %}" role="button">Crear Dispositivo</a> <br>
+        <a class="btn btn-outline-success btn-sm btn-block mb-1" href="{% url 'crear_color' %}" role="button">Agregar Color</a> <br>
+        <a class="btn btn-outline-success btn-sm btn-block" href="{% url 'crear_marca' %}" role="button">Agregar Marca</a>
       </div>
     
   </div>
@@ -49,7 +57,7 @@
     {% for dispositivo in lista_dispositivos %}
       <tr>
         <th scope="row">{{dispositivo.id}}</th>
-        <td>{{dispositivo.modelo_dispositivo.marca}}</td>
+        <td>{{dispositivo.marca}}</td>
         <td>{{dispositivo.modelo_dispositivo}}</td>
         <td>{{dispositivo.color_dispositivo}}</td>
         <td>{{dispositivo.serial}}</td>

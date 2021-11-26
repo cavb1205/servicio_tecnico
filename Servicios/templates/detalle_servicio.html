@@ -9,9 +9,9 @@
       <div class="card-body">
         <h6 class="card-title"><b>Cliente:</b> {{servicio.cliente.identificacion}} - {{servicio.cliente.nombres}} {{servicio.cliente.apellidos}} <a class="btn btn-outline-info btn-sm" href="{% url 'detalle_cliente' servicio.cliente.id %}">Ver</a> </h6>
         <h6 class="card-title"><b>Fecha de Ingreso:</b> {{servicio.fecha_ingreso}}</h6>
-        <h6 class="card-title"><b>Dispositivo:</b> <a href="{% url 'detalle_dispositivo' servicio.dispositivo.id %}"> {{servicio.dispositivo.modelo_dispositivo.marca}} {{servicio.dispositivo.modelo_dispositivo.modelo}}</a></h6>
+        <h6 class="card-title"><b>Dispositivo:</b> <a href="{% url 'detalle_dispositivo' servicio.dispositivo.id %}"> {{servicio.dispositivo.marca}} {{servicio.dispositivo.modelo_dispositivo}}</a></h6>
         <h6 class="card-title"><b>Color Dispositivo:</b> {{servicio.dispositivo.color_dispositivo}} </h6>
-        <h6 class="card-title"><b>Tipo Dispositivo:</b> {{servicio.dispositivo.modelo_dispositivo.tipo_modelo}}</h6>
+        <h6 class="card-title"><b>Tipo Dispositivo:</b> {{servicio.dispositivo.tipo}}</h6>
         <h6 class="card-title"><b>Problema Inicial:</b> {{servicio.problema_frecuente}}</h6>
         <h6 class="card-title"><b>Observaciones:</b> {{servicio.observaciones}}</h6>
         <h6 class="card-title"><b>Código Desbloqueo:</b> {{servicio.codigo_desbloqueo}}</h6>
@@ -27,11 +27,13 @@
         {% endif %}
       </div>
       <div class="card-footer bg-transparent border-success text-center"><b>Acciones Disponibles</b> <br> <br>
-      
+        <a class="btn btn-outline-primary btn-sm btn-block mb-3" href="{% url 'imprimir_detalle_servicio' servicio.id %}" target="_blank" role="button"><b>Imprimir Orden</b></a>
+        <br>
         <a class="btn btn-outline-dark btn-sm btn-block" href="{% url 'iniciar_trabajo' servicio.id %}" role="button"><b>Trabajar en la Orden</b></a> <br><br>
       
         <a class="btn btn-outline-warning btn-sm btn-block" href="{% url 'editar_servicio' servicio.id %}" role="button"><b>Modificar Orden</b></a>
         <a class="btn btn-outline-danger btn-sm btn-block" href="" role="button"><b>Eliminar Orden</b></a>
+        
       </div>
     </div>
   </div>
@@ -40,4 +42,39 @@
 <br>
 
 
+
+<!--MODAL IMPRIMIR DETALLE-->
+<div class="modal"  id='imprimirModal'>
+  <div class="modal-dialog modal-fullscreen-md-down">
+    <div class="modal-content ">
+      
+      
+        
+                <h1><b>{{servicio.tienda.nombre|title}}</b></h1>
+                <h6><b>Orden #:</b> {{servicio.id}}</h6>
+                <h6><b>Fecha Ingreso: </b>{{servicio.fecha_ingreso}}</h6>
+                <h6>---------------</h6>
+                <b>Cliente:</b> {{servicio.cliente.identificacion}}
+                {{servicio.cliente.nombres}}
+                {{servicio.cliente.apellidos}}
+                <h6>---------------</h6>
+                <h6><b>Dispositivo</b></h6>
+                <h6><b>Marca:</b>{{servicio.dispositivo.marca}}</h6>
+                <h6><b>Modelo:</b>{{servicio.dispositivo.modelo_dispositivo}}</h6>
+                <h6><b>Observaciones:</b> {{servicio.observaciones}}</h6>
+                <h6>---------------</h6>
+                <h6><b>Problema:</b> {{servicio.problema_frecuente}}</h6>
+                <h6><b>Valor Revisión:</b> {{servicio.valor_revision}}</h6>
+                <h6><b>Valor Abono:</b> {{servicio.abono}}</h6>
+                <h6><b>Fecha Entrega: </b>{{servicio.fecha_entrega_estimada}}</h6>
+                <button class="btn btn-light" type="button" onclick="javascript:window.print()">Imprimir</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+     
+      
+    </div>
+  </div>
+</div>
 {% endblock %}
+
+
+

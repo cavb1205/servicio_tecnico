@@ -28,6 +28,16 @@ def lista_servicios(requets):
     return render(requets, 'lista_servicios.html',context)
 
 
+@login_required
+def imprimir_detalle_servicio(request, servicio_id):
+    servicio = Servicios.objects.get(pk=servicio_id)
+    tienda = request.user.perfil.tienda
+    context = {
+        'servicio':servicio,
+        'tienda':tienda
+    }
+    return render(request, 'imprimir_detalle_servicio.html',context)
+
 
 @login_required
 def detalle_servicio(request, servicio_id):
@@ -40,6 +50,21 @@ def detalle_servicio(request, servicio_id):
     }
     return render(request, 'detalle_servicio.html', context)
 
+@login_required
+def crear_problema_frecuente(request):
+    if request.method == 'POST':
+        form = Problemas_FrecuentesForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Problema frecuente creado con éxito.')
+            return redirect('lista_servicios')
+    else:
+        form = Problemas_FrecuentesForm()
+        context = {
+            'form':form,
+                
+        }
+    return render(request, 'problema_frecuente_form.html', context)
 
 @login_required
 def crear_servicio(request, cliente_id):

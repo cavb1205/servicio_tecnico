@@ -29,7 +29,7 @@ class TiendaForm(ModelForm):
         super(TiendaForm, self).__init__(*args,**kwargs)
         self.fields['nombre'].label = 'Nombre de la tienda'
         
-        self.initial['telefono'] = '+56'
+        
 
 
     class Meta:
@@ -45,7 +45,7 @@ class TiendaForm(ModelForm):
         widgets = {
             'nombre': forms.TextInput(attrs={'class':'form-control'}),
             'direccion': forms.TextInput(attrs={'class':'form-control'}),
-            'ciudad': forms.Select(attrs={'class':'form-control'}),
+            'ciudad': forms.TextInput(attrs={'class':'form-control'}),
             
             'telefono': forms.TextInput(attrs={'class':'form-control'}),
             'moneda': forms.Select(attrs={'class':'form-control'}),

@@ -9,17 +9,10 @@ class Tipo_ModeloForm(ModelForm):
     class Meta:
         model = Tipo_Modelo
         fields = '__all__'
-
-
-class Modelo_DispositivoForm(ModelForm):
-    class Meta:
-        model = Modelo_Dispositivo
-        fields = '__all__'
         widgets = {
-            'marca': forms.Select(attrs={'class':'form-control'}),
-            'modelo': forms.TextInput(attrs={'class':'form-control'}),
-            'tipo_modelo': forms.Select(attrs={'class':'form-control'}),
+            'nombre': forms.TextInput(attrs={'class':'form-control'})
         }
+
 
 class Color_DispositivoForm(ModelForm):
     class Meta:
@@ -30,11 +23,21 @@ class Color_DispositivoForm(ModelForm):
         }
 
 
+
+class MarcaForm(ModelForm):
+    class Meta:
+        model = Marca_Dispositivo
+        fields = '__all__'
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class':'form-control'})
+        }
+
+
 class DispositivoForm(ModelForm):
     class Meta:
         model = Dispositivo
         fields = [ 
-            'modelo_dispositivo','serial','imei_principal','imei_opcional','direccion_mac','color_dispositivo',
+            'marca','modelo_dispositivo','tipo','serial','imei_principal','imei_opcional','direccion_mac','color_dispositivo',
         ]
 
     def __init__(self, *args, **kwargs):
@@ -45,7 +48,19 @@ class DispositivoForm(ModelForm):
         self.initial['direccion_mac']='N/A'
         
 
+        self.fields['marca'].widget.attrs.update(
+            {
+                'class': 'form-control',
+                
+            }
+        )
         self.fields['modelo_dispositivo'].widget.attrs.update(
+            {
+                'class': 'form-control',
+                
+            }
+        )
+        self.fields['tipo'].widget.attrs.update(
             {
                 'class': 'form-control',
                 
@@ -92,7 +107,7 @@ class DispositivoIndividualForm(ModelForm):
     class Meta:
         model = Dispositivo
         fields = [ 
-            'modelo_dispositivo','serial','imei_principal','imei_opcional','direccion_mac','color_dispositivo','cliente'
+            'marca','modelo_dispositivo','tipo','serial','imei_principal','imei_opcional','direccion_mac','color_dispositivo','cliente'
         ]
 
     def __init__(self,tienda,*args, **kwargs):
@@ -104,7 +119,20 @@ class DispositivoIndividualForm(ModelForm):
         self.fields['cliente'].queryset = Cliente.objects.filter(tienda=tienda.id)
         
 
+        self.fields['marca'].widget.attrs.update(
+            {
+                'class': 'form-control',
+                
+            }
+        )
+
         self.fields['modelo_dispositivo'].widget.attrs.update(
+            {
+                'class': 'form-control',
+                
+            }
+        )
+        self.fields['tipo'].widget.attrs.update(
             {
                 'class': 'form-control',
                 

@@ -47,8 +47,8 @@
           <tbody>
             {% for dispositivo in dispositivos %}
               <tr>
-                <th scope="row"><a href="{% url 'detalle_dispositivo' dispositivo.id %}">{{dispositivo.modelo_dispositivo.marca}}</a></th>
-                <td>{{dispositivo.modelo_dispositivo.modelo}}</td>
+                <th scope="row"><a href="{% url 'detalle_dispositivo' dispositivo.id %}">{{dispositivo.marca}}</a></th>
+                <td>{{dispositivo.modelo_dispositivo}}</td>
                 <td>{{dispositivo.color_dispositivo}}</td>
                 <td>{{dispositivo.serial}}</td>
               </tr>

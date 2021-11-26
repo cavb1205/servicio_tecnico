@@ -1,6 +1,6 @@
 from django.contrib.auth import models
 from django.db.models.base import Model
-from django.forms import ModelForm, widgets
+from django.forms import ModelForm, fields, widgets
 
 from Trabajadores.models import Perfil
 from django.contrib.auth.models import User
@@ -16,7 +16,15 @@ class LoginForm(ModelForm):
             'password':forms.PasswordInput(attrs={'class':'form-control'}),
         }
         
+class PasswordForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(PasswordForm, self).__init__(*args, **kwargs)
+        self.fields['password'].label = 'Nueva Contraseña'
 
+    class Meta:
+        model = User
+        fields = ['password',]
+        widgets = {'password':forms.PasswordInput(attrs={'class':'form-control'}),}
 
 
 class TrabajadorForm(ModelForm):

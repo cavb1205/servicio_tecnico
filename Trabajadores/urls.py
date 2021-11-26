@@ -9,9 +9,8 @@ urlpatterns = [
     path('nuevo/', views.crear_trabajador, name='crear_trabajador'),
     path('editar/<int:trabajador_id>/', views.editar_trabajador, name='editar_trabajador'),
     path('eliminar/<int:trabajador_id>/', views.eliminar_trabajador, name='eliminar_trabajador'),
+    path('password/<int:trabajador_id>/', views.cambiar_password, name='editar_password'),
 
-    #login urls
-    path('login/', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout'),
+    
     
 ]

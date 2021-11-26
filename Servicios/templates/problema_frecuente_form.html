@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+
+<div class="content">
+
+  <div class="row justify-content-center">
+    <div class="col-md-8 align-items-center">
+
+  <br>
+  <h2>Crear Problema Frecuente</h2>
+  <br>
+  <br>
+  <form class="row g-3" method="post">
+      {% csrf_token %}
+      
+      {{form.as_p}}
+      
+      <div class="col-12">
+        <button class="btn btn-success" type="submit">Guardar</button>
+      </div>
+    </form>
+
+</div>
+</div>
+
+</div>
+{% endblock %}

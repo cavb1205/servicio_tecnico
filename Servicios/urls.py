@@ -8,6 +8,7 @@ from . import views
 urlpatterns = [
     path('lista/', views.lista_servicios, name='lista_servicios'),
     path('<int:servicio_id>/', views.detalle_servicio, name='detalle_servicio'),
+    path('<int:servicio_id>/print/', views.imprimir_detalle_servicio, name='imprimir_detalle_servicio'),
     path('nuevo/<int:cliente_id>/', views.crear_servicio, name='crear_servicio'),
     path('auto/', views.lista_personas, name='lista_personas'),
     path('c/buscar/', views.buscar_cliente, name='buscar_cliente'),
@@ -23,5 +24,5 @@ urlpatterns = [
     path('ordenes-canceladas/', views.ordenes_canceladas, name='ordenes_canceladas'),
     path('ordenes-reparadas/', views.ordenes_reparadas, name='ordenes_reparadas'),
 
-    
+    path('problema/nuevo/', views.crear_problema_frecuente, name='crear_problema_frecuente'),
 ]

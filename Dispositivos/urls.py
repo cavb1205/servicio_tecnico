@@ -13,6 +13,8 @@ urlpatterns = [
     
     #rutas para colores de dispositivos
     path('color/nuevo/', views.crear_color, name='crear_color'),
+    path('marca/nuevo/', views.crear_marca, name='crear_marca'),
+    
 
     path('modelo/nuevo/', views.crear_modelo_dispositivo, name='crear_modelo_dispositivo'),
 ]

@@ -3,14 +3,21 @@
 {% block contenido %}
 <br>
 <div class="container">
-
+  {% if messages %}
+  <div class="messages">
+      {% for message in messages %}
+      <div{% if message.tags %} class="aler alert-{{ message.tags }}"  role="alert"{% endif %}>{{ message }}</div>
+      {% endfor %}
+  </div>
+  {% endif %}
 
 <div class="row">
   <div class="col-md">
     <div class="card card-body">
       <h1 class="text-center">Ordenes de Servicio</h1>
       <h5 class="text-center">Total: {{total_servicios}}</h5>
-      <a class="btn btn-outline-success btn-md " href="{% url 'buscar_cliente' %}" role="button">Crear Orden</a> <br>
+      <a class="btn btn-outline-success btn-md mb-1 " href="{% url 'buscar_cliente' %}" role="button">Crear Orden</a> <br>
+      <a class="btn btn-outline-success btn-md " href="{% url 'crear_problema_frecuente' %}" role="button">Crear Problema Frecuente</a> <br>
     </div>
   </div>
   <div class="row">

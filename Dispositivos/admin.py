@@ -5,6 +5,6 @@ from Dispositivos.models import *
 
 admin.site.register(Color_Dispositivo)
 admin.site.register(Tipo_Modelo)
-admin.site.register(Modelo_Dispositivo)
+
 admin.site.register(Dispositivo)
 admin.site.register(Marca_Dispositivo)

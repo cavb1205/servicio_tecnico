@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
-
+from Trabajadores.views import login_view, logout_view
 
 
 urlpatterns = [
@@ -27,6 +27,10 @@ urlpatterns = [
     path('dispositivo/', include('Dispositivos.urls')),
     path('servicios/', include('Servicios.urls')),
     
-    
+    path('', login_view, name='inicio'),
+
+    #login urls appp trabajadores
+    path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
 ]
 
