@@ -5,7 +5,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md">
-      <div class="card card-body mt-2">
+      <div class="card card-body mt-2 shadow p-3 mb-5 bg-body rounded">
         <h4 class="card-title">Cliente: {{cliente.identificacion}}</h4>
         <h5>{{cliente.nombres|title}} {{cliente.apellidos|title}}</h5>
         <a href="{% url 'editar_cliente' cliente.id %}" class="btn btn-outline-info btn-sm btn-block">Actualizar Cliente</a>
@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="col-md">
-      <div class="card card-body mt-2">
+      <div class="card card-body mt-2 shadow p-3 mb-5 bg-body rounded">
         <h5 class="card-title">Información de Contacto</h5>
         <p>Email: {{cliente.email}}</p>
         <p>No. Teléfono: {{cliente.telefono_principal}}</p>
@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="col-md">
-      <div class="card card-body mt-2 text-center ">
+      <div class="card card-body mt-2 text-center shadow p-3 mb-5 bg-body rounded">
         <h5 class="card-title  text-success">Total Ordenes de Servicio</h5>
         <h1 class="text-center text-success">{{total_ordenes}}</h1>
       </div>

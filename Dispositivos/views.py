@@ -101,13 +101,13 @@ def editar_dispositivo(request, dispositivo_id):
 
     dispositivo = Dispositivo.objects.get(pk=dispositivo_id)
     if request.method == 'POST':
-        form = DispositivoForm(tienda,request.POST, instance=dispositivo)
+        form = EditarDispositivoForm(request.POST, instance=dispositivo)
         if form.is_valid():
             dispositivo = form.save(commit=False)
             dispositivo.save()
             return redirect('detalle_dispositivo', dispositivo_id=dispositivo.id)
     else:
-        form = DispositivoForm(tienda,instance=dispositivo)
+        form = EditarDispositivoForm(instance=dispositivo)
         print(form)
     return render(request, 'editar_dispositivo_form.html', {'form':form})
 

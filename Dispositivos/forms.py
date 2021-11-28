@@ -180,3 +180,25 @@ class DispositivoIndividualForm(ModelForm):
             }
         )
       
+
+class EditarDispositivoForm(ModelForm):
+    class Meta:
+        model = Dispositivo
+        fields = [ 
+            'marca','modelo_dispositivo','tipo','serial','imei_principal','imei_opcional','direccion_mac','color_dispositivo',
+        ]
+        widgets = {
+            'marca': forms.Select(attrs={'class':'form-control'}),
+            'modelo_dispositivo': forms.TextInput(attrs={'class':'form-control'}),
+            'tipo': forms.Select(attrs={'class':'form-control'}),
+            'serial': forms.TextInput(attrs={'class':'form-control'}),
+            'imei_principal': forms.TextInput(attrs={'class':'form-control'}),
+            'imei_opcional': forms.TextInput(attrs={'class':'form-control'}),
+            'direccion_mac': forms.TextInput(attrs={'class':'form-control'}),
+            'color_dispositivo': forms.Select(attrs={'class':'form-control'}),
+            
+
+
+        }
+
+      

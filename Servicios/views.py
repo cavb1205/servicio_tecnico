@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 
 
 from .models import *
@@ -70,13 +71,11 @@ def crear_problema_frecuente(request):
 def crear_servicio(request, cliente_id):
     '''Creamos un servicio en el sistema'''
     cliente = Cliente.objects.get(pk=cliente_id)
-    
-    print(cliente)
     if request.method == 'POST':
-        print('ingresamos al meth post de crear servicio e imprimimos')
-        
+        print('ingrsa a method post')
         form = ServiciosForm(cliente, request.POST)
         if form.is_valid():
+            print('form is valid ingresa')
             servicio = form.save(commit=False)
             if servicio.valor_total > 0:
                 servicio.saldo_pendiente = servicio.valor_total
@@ -84,11 +83,14 @@ def crear_servicio(request, cliente_id):
                     servicio.saldo_pendiente = servicio.saldo_pendiente - servicio.abono
             elif servicio.abono > 0:
                 servicio.saldo_pendiente = servicio.saldo_pendiente + servicio.abono
+            print('pasa todos los if')
             servicio.estado_orden = Estado_Orden.objects.get(nombre__icontains = 'En Espera de Revisión')
             servicio.tienda = request.user.perfil.tienda
+            servicio.cliente = cliente
+            print(servicio.cliente)
             servicio.save()
             
-        return redirect('detalle_servicio', servicio_id=servicio.id)
+            return redirect('detalle_servicio', servicio_id=servicio.id)
 
     else:
         print('ingresamos al form vacio de servicio')
@@ -154,20 +156,20 @@ def buscar_cliente(request):
         
         if form.is_valid():
             print('ingresamos a form valid')
-            
-            cliente = form.cleaned_data['cliente']
-            espacios = cliente.find(' ')
-            cliente = cliente[0:espacios]
-            print(espacios)
-            print(cliente)
-            print(type(cliente))
-            cliente = Cliente.objects.get(identificacion=cliente)
-            print('el cliente es:')
-            print(cliente.id)
-
-            
-              
-            return redirect('crear_servicio', cliente_id=cliente.id)
+            try:
+                cliente = form.cleaned_data['cliente']
+                espacios = cliente.find(' ')
+                cliente = cliente[0:espacios]
+                print(espacios)
+                print(cliente)
+                print(type(cliente))
+                cliente = Cliente.objects.get(identificacion=cliente)
+                print('el cliente es:')
+                print(cliente.id)
+                return redirect('crear_servicio', cliente_id=cliente.id)
+            except:
+                messages.error(request, 'No encontramos registros del cliente. Por favor cree uno.')
+                return render(request, 'busqueda_cliente_form.html', {'form':form})
 
     else:
         form = ClienteForm()
@@ -179,9 +181,10 @@ def buscar_cliente(request):
 
 @login_required
 def iniciar_trabajo(request, servicio_id):
+    tienda = request.user.perfil.tienda
     servicio = Servicios.objects.get(pk=servicio_id)
     if request.method == 'POST':
-        form = IniciarTrabajoForm(request.POST, instance=servicio)
+        form = IniciarTrabajoForm(tienda,request.POST, instance=servicio)
         if form.is_valid():
             orden = form.save(commit=False)
 
@@ -293,7 +296,7 @@ def iniciar_trabajo(request, servicio_id):
           
                 
     else:
-        form = IniciarTrabajoForm(instance=servicio)
+        form = IniciarTrabajoForm(tienda,instance=servicio)
     return render(request, 'iniciar_trabajo.html', {'form':form})
 
 

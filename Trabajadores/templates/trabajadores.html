@@ -9,14 +9,14 @@
 
 
   <div class="row">
-    <div class="col-md-4">
-      <div class="card card-body">   
-        <h1 class="card-title text-center">Trabajadores </h1>
-        <a href="{% url 'crear_trabajador' %}" class="btn btn-outline-info btn-sm btn-block">Crear Trabajador</a>
+    <div class="col-md">
+      <div class="card card-body shadow p-3 mb-5 bg-body rounded">   
+        <h1 class="card-title text-center mb-2">Trabajadores </h1>
+        <a href="{% url 'crear_trabajador' %}" class="btn btn-outline-info btn-sm btn-block my-2">Crear Trabajador</a>
     </div>
     </div>
     <div class="col-md">
-      <div class="card">
+      <div class="card shadow p-3 mb-5 bg-body rounded">
       <div class="card-body">
         <h4 class="card-title text-center">Total Trabajadores: </h4>
         <h1 class="text-center text-success">{{total_trabajadores}}</h1>

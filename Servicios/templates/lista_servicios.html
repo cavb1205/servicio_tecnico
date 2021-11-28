@@ -11,38 +11,19 @@
   </div>
   {% endif %}
 
-<div class="row">
-  <div class="col-md">
-    <div class="card card-body">
+<div class="row justify-content-md-center mb-2">
+  <div class="col-md-6 mb-2">
+    <div class="card card-body shadow p-3 mb-5 bg-body rounded">
       <h1 class="text-center">Ordenes de Servicio</h1>
-      <h5 class="text-center">Total: {{total_servicios}}</h5>
+      <h5 class="text-center text-primary">Total: {{total_servicios}}</h5>
       <a class="btn btn-outline-success btn-md mb-1 " href="{% url 'buscar_cliente' %}" role="button">Crear Orden</a> <br>
       <a class="btn btn-outline-success btn-md " href="{% url 'crear_problema_frecuente' %}" role="button">Crear Problema Frecuente</a> <br>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md">
-      <div class="card text-white bg-primary">
-        <div class="card-header text-center"><h4>Ordenes de Servicio en Espera</h4></div>
-        <div class="card-body">
-          <h2 class="card-title text-center">MODIFICAR</h2>
-        </div>
-      </div>
-    </div>
-  <div class="col-md">
-    <div class="card text-white bg-warning">
-      <div class="card-header text-center"><h4>Ordenes de Servicio en Proceso</h4></div>
-      <div class="card-body">
-        <h2 class="card-title text-center">MODIFICAR ESTADISTICAS</h2>
-      </div>
-    </div>
-  </div>
-  </div>
-  
 </div>
 
 
-<br>   
+
 <table class="table">
     <thead>
       <tr>

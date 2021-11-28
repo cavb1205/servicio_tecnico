@@ -21,7 +21,16 @@ $( "#id_cliente" ).autocomplete({
 <br>
 <h2>Nueva Orden de Servicio</h2>
 <br>
-
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+    
+    {% endfor %}
+</ul>
+{% endif %}
 <a class="btn btn-primary" href="{% url 'crear_cliente_servicio' %}" role="button">Nuevo Cliente</a>
 <br>
 <br>

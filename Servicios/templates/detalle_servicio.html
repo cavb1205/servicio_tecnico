@@ -32,7 +32,7 @@
         <a class="btn btn-outline-dark btn-sm btn-block" href="{% url 'iniciar_trabajo' servicio.id %}" role="button"><b>Trabajar en la Orden</b></a> <br><br>
       
         <a class="btn btn-outline-warning btn-sm btn-block" href="{% url 'editar_servicio' servicio.id %}" role="button"><b>Modificar Orden</b></a>
-        <a class="btn btn-outline-danger btn-sm btn-block" href="" role="button"><b>Eliminar Orden</b></a>
+        <a class="btn btn-outline-danger btn-sm btn-block" href="" data-bs-toggle="modal" data-bs-target="#eliminar_servicio" role="button"><b>Eliminar Orden</b></a>
         
       </div>
     </div>
@@ -41,7 +41,25 @@
 
 <br>
 
-
+<!--Modal eliminar servicio-->
+<div class="modal" tabindex="-1" id='eliminar_servicio'>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content ">
+      <div class="modal-header alert alert-danger">
+        <h5 class="modal-title">Eliminar Servicio {{servicio.id}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Esta seguro que desea eliminar el registro?</p>
+      </div>
+      <div class="modal-footer">
+        <a href="{% url 'eliminar_servicio' servicio.id %}" class="btn btn-danger">Eliminar</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <!--MODAL IMPRIMIR DETALLE-->
 <div class="modal"  id='imprimirModal'>

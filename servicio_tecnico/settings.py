@@ -133,3 +133,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 LOGIN_URL = reverse_lazy('login')
+
+
+#datos del servidor de correos para enviar mails
+from decouple import config
+
+EMAIL_HOST = 'smtp.googlemail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'phonefixsystem@gmail.com'
+EMAIL_HOST_PASSWORD = config('USER_MAIL_PASSWORD')
+EMAIL_USE_TLS = True

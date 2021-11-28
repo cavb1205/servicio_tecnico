@@ -7,6 +7,7 @@ from .models import *
 from .views import *
 from Dispositivos.models import Dispositivo
 from Servicios.models import Estado_Orden
+from Trabajadores.models import Perfil
 
 
 class Problemas_FrecuentesForm(ModelForm):
@@ -104,6 +105,9 @@ class ServiciosForm(ModelForm):
 
 
 class IniciarTrabajoForm(ModelForm): 
+    def __init__(self,tienda,*args,**kwargs):
+        super(IniciarTrabajoForm,self).__init__(*args,**kwargs)
+        self.fields['tecnico'].queryset = User.objects.filter(perfil__tienda=tienda.id)
     class Meta:
         model = Servicios 
         fields = ['fecha_entrega_estimada','estado_orden','abono','problema_frecuente','observaciones','valor_total','solucion_final','tecnico']

@@ -13,6 +13,7 @@ from Tiendas.models import Tienda
 
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import make_password
 
 
 def login_view(request):
@@ -88,9 +89,11 @@ def crear_trabajador(request):
         perfilform = PerfilForm(request.POST)
         if userform.is_valid() and perfilform.is_valid():
             p = perfilform.save(commit=False)
-            usuario = userform.save()
-            perfil = Perfil.objects.create(trabajador=usuario, identificacion = p.identificacion, biografia = p.biografia, telefono = p.telefono, tienda=tienda)
+            usuario = userform.save(commit=False)
+            usuario.username = usuario.email
+            usuario.set_password(request.POST.get('password'))
             usuario.save()
+            perfil = Perfil.objects.create(trabajador=usuario, identificacion = p.identificacion, biografia = p.biografia, telefono = p.telefono, tienda=tienda)
             perfil.save()
             messages.success(request, 'Trabajador creado con éxito.') 
             return redirect('detalle_trabajador', trabajador_id=usuario.id)

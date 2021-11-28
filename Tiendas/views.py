@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 
@@ -10,8 +11,28 @@ from Trabajadores.models import Perfil
 from Servicios.models import Servicios
 from Clientes.models import *
 
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
 
 
+def enviar_email_tienda(tienda, administrador):
+    print('ingresa a funcion enviar email')
+    template = get_template('email_tienda.html')
+    context = {
+        'tienda':tienda,
+        'administrador':administrador,
+    }
+    content = template.render(context)
+
+    email = EmailMultiAlternatives(
+        'Tienda creada en phonefixsystem',
+        '',
+        settings.EMAIL_HOST_USER,
+        [administrador.email],
+    )
+    email.attach_alternative(content, 'text/html')
+    email.send()
+    return print('email enviado con exito')
 
 def crear_tienda(request):
     if request.method == 'POST':
@@ -31,7 +52,7 @@ def crear_tienda(request):
             tienda.save()
 
             perfil = Perfil.objects.create(trabajador=administrador, identificacion='n/a', biografia='Administrador Tienda', telefono=tienda.telefono, tienda=tienda)
-
+            enviar_email_tienda(tienda,administrador)
             messages.success(request, 'Su cuenta ha sido creada con éxito, por favor inicia sesión en el sistema')
             return redirect('login')
     else:
@@ -85,9 +106,6 @@ def tienda(request):
 
 @login_required
 def detalle_tienda(request, tienda_id ):
-    ##consultas de ordenes a la bd
-    print('ingresa a la tienda id')
-    print(tienda_id)
 
     tienda = Tienda.objects.get(id=request.user.perfil.tienda.id)
 
