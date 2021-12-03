@@ -50,6 +50,28 @@ class TrabajadorForm(ModelForm):
 
 
 
+class EditarTrabajadorForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EditarTrabajadorForm,self).__init__(*args, **kwargs)
+        self.fields['first_name'].label = 'Nombres'
+        self.fields['last_name'].label = 'Apellidos'
+        self.fields['email'].label = 'Email'
+        self.fields['groups'].label = 'Grupos'
+        self.fields['is_active'].label = 'Estado del trabajador'
+        self.fields['is_superuser'].label = 'El usuario es administrador?'
+    class Meta:
+        model = User
+        fields = ['first_name','last_name','email','groups','is_active','is_superuser',]
+        widgets = {
+            'first_name':forms.TextInput(attrs={'class':'form-control'}),
+            'last_name':forms.TextInput(attrs={'class':'form-control'}),
+            'email':forms.EmailInput(attrs={'class':'form-control'}),
+            'groups':forms.SelectMultiple(attrs={'class':'form-control'}),
+        }
+
+
+
+
 
 
 

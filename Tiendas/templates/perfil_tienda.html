@@ -7,10 +7,14 @@
         <div class="col-6">
             <div class="card shadow p-3 mb-3 bg-body rounded" style="max-width: 600px;">
                 <div class="card-body col-12 p-5 ">
-                    <h1 class="text-center text-dark">{{tienda.nombre|title}}</h1>
+                    <div class="alert alert-light" role="alert">
+                        <h1 class="text-center">{{tienda.nombre|title}}</h1>
+                    </div>
+                    
                     <div class="text-center"><small class="text-muted">{{tienda.ciudad|title}}</small></div>
                     <div class="row justify-content-center my-3" >
-                        <div class="col-12 px-5">
+                        <div class="alert alert-light" role="alert">
+                            <h4 class="text-center"><b>Información de la Tienda</b></h4>
                             <p><b>Dirección:</b> {{tienda.direccion}}</p>
                             <p><b>Administrador:</b> {{tienda.administrador}}</p>
                           
@@ -18,7 +22,13 @@
                             <p><b>Moneda:</b> {{tienda.moneda}}</p>
                             <p><b>Estado Actual:</b> {% if tienda.estado == True %}Activo{%else%}Inactivo{% endif %}</p>
                         </div>
-                        
+                        <div class="alert alert-light" role="alert">
+                            <h4 class="text-center"><b>Suscripción</b></h4>
+                            <p><b>Tipo de membresía:</b> {{tienda.tienda_membresia.membresia}}</p>
+                            <p><b>Estado Membresía:</b> {% if tienda.tienda_membresia.estado %} Activa {% else %} Vencida {% endif %}</p>
+                            <p><b>Fecha Activación:</b> {{tienda.tienda_membresia.fecha_activacion}}</p>
+                            <p><b>Fecha Vencimiento:</b> {{tienda.tienda_membresia.fecha_vencimiento}}</p>
+                        </div>
                     </div>
                     <p class="text-muted text-center">Fecha Registro: {{tienda.fecha_registro}}</p>
 

@@ -4,9 +4,9 @@ from django.contrib.auth.decorators import login_required
 
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
-from Tiendas.forms import AdminTiendaForm, TiendaForm
+from Tiendas.forms import AdminTiendaForm, MembresiaForm, TiendaForm
 from Tiendas.models import *
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from Trabajadores.models import Perfil
 from Servicios.models import Servicios
 from Clientes.models import *
@@ -15,12 +15,13 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 
 
-def enviar_email_tienda(tienda, administrador):
+def enviar_email_tienda(tienda, administrador, membresia):
     print('ingresa a funcion enviar email')
     template = get_template('email_tienda.html')
     context = {
         'tienda':tienda,
         'administrador':administrador,
+        'membresia':membresia,
     }
     content = template.render(context)
 
@@ -52,7 +53,8 @@ def crear_tienda(request):
             tienda.save()
 
             perfil = Perfil.objects.create(trabajador=administrador, identificacion='n/a', biografia='Administrador Tienda', telefono=tienda.telefono, tienda=tienda)
-            enviar_email_tienda(tienda,administrador)
+            membresia = Tienda_membresia.objects.create(tienda=tienda, fecha_activacion=date.today(),fecha_vencimiento=(date.today() + timedelta(days=15)))
+            enviar_email_tienda(tienda,administrador, membresia)
             messages.success(request, 'Su cuenta ha sido creada con éxito, por favor inicia sesión en el sistema')
             return redirect('login')
     else:
@@ -69,16 +71,32 @@ def crear_tienda(request):
 @login_required
 def editar_tienda(request, tienda_id):
     tienda = Tienda.objects.get(id=tienda_id)
+    membresia = Tienda_membresia.objects.get(tienda=tienda_id)
+    print('consulto la tienda y la membresia')
+    print(tienda)
+    print(membresia)
     if request.method == 'POST':
         form = TiendaForm(request.POST, instance=tienda)
-        if form.is_valid():
+        membresiaform = MembresiaForm(request.POST, instance=membresia)
+        if form.is_valid() and membresiaform.is_valid():
             form.save()
+            membresia = membresiaform.save(commit=False)
+            membresia.fecha_activacion = date.today()
+            if membresia.membresia.nombre == 'Mensual':
+                membresia.fecha_vencimiento = membresia.fecha_activacion + timedelta(days=31)
+            elif membresia.membresia.nombre == 'Anual':
+                membresia.fecha_vencimiento = membresia.fecha_activacion + timedelta(days=365)
+            else:
+                pass
+            membresia.save()
             messages.success(request, 'Tienda actualizada con éxito.')
             return redirect('perfil_tienda_detalle', tienda.id)
 
     else:
+        print('ingresa al else de editar tienda')
         form = TiendaForm(instance=tienda)
-    return render(request, 'editar_tienda_form.html',{'form':form})
+        membresiaform = MembresiaForm(instance=membresia)
+    return render(request, 'editar_tienda_form.html',{'form':form,'membresiaform':membresiaform})
 
 
 

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.forms import ModelForm, widgets
 from django import forms
-from Tiendas.models import Tienda
+from Tiendas.models import Membresia, Tienda, Tienda_membresia
 
 
 
@@ -52,3 +52,13 @@ class TiendaForm(ModelForm):
         }
 
 
+class MembresiaForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(MembresiaForm, self).__init__(*args, **kwargs)
+        self.fields['membresia'].queryset = Membresia.objects.exclude(nombre='Gratis')
+    class Meta:
+        model = Tienda_membresia
+        fields = ['membresia']
+        widgets = {
+            'membresia': forms.Select(attrs={'class':'form-control'}),
+        }

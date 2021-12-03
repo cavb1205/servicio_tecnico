@@ -21,9 +21,12 @@
             <div class="col-6">
                 <div class="card shadow p-3 mb-3 bg-body rounded" style="max-width: 600px;">
                     <div class="card-body col-12 p-5 ">
-                        <h1 class="text-center text-dark">Te damos la bienvenida a Phone Fix System</h1>
-                        <h1 class="text-center text-dark">{{tienda.nombre|title}}</h1>
-                        <div class="text-center"><small class="text-muted">{{tienda.ciudad|title}}</small></div>
+                        <div class="alert alert-light" role="alert">
+                            <h1 class="text-center text-dark">Te damos la bienvenida a Phone Fix System</h1>
+                            <h1 class="text-center text-dark">{{tienda.nombre|title}}</h1>
+                            <div class="text-center"><small class="text-muted">{{tienda.ciudad|title}}</small></div>
+                        </div>
+                        
                         <div class="row justify-content-center my-3" >
                             <div class="col-12 px-5">
                                 <div class="alert alert-info" role="alert">
@@ -32,6 +35,13 @@
                                 <div class="alert alert-light" role="alert">
                                     <p><b>Email de ingreso:</b> {{administrador.email}}</p>
                                     <p><b>Contraseña:</b> La contraseña que ingresaste a la hora del registro</p>
+                                </div>
+                                <div class="alert alert-light" role="alert">
+                                    <h4><b>Suscripción</b></h4>
+                                    <p><b>Tipo de membresía:</b> {{membresia.membresia}}</p>
+                                    <p><b>Estado Membresía:</b> {% if membresia.estado %} Activa {% else %} Vencida {% endif %}</p>
+                                    <p><b>Fecha Activación:</b> {{membresia.fecha_activacion}}</p>
+                                    <p><b>Fecha Vencimiento:</b> {{membresia.fecha_vencimiento}}</p>
                                 </div>
                                 
                             </div>

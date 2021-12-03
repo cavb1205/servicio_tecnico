@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.urls import reverse
 from Servicios.models import Servicios
 from Trabajadores.models import Perfil
-from .forms import TrabajadorForm, PerfilForm, PasswordForm
+from .forms import TrabajadorForm, PerfilForm, PasswordForm, EditarTrabajadorForm
 
 from Tiendas.models import Tienda
 
@@ -112,7 +112,7 @@ def editar_trabajador(request, trabajador_id):
     perfil = Perfil.objects.get(trabajador=trabajador.id)
 
     if request.method == 'POST':
-        userform = TrabajadorForm(request.POST, instance=trabajador)
+        userform = EditarTrabajadorForm(request.POST, instance=trabajador)
         perfilform = PerfilForm(request.POST, instance=perfil)
         if userform.is_valid() and perfilform.is_valid():
             usuario = userform.save()
@@ -123,7 +123,7 @@ def editar_trabajador(request, trabajador_id):
             messages.warning(request, 'No se pudo crear el registro, por favor corregir los datos.') 
             return render(request,'trabajador_form.html', {'userform':userform,'perfilform':perfilform})
     else:
-        userform = TrabajadorForm(instance=trabajador)
+        userform = EditarTrabajadorForm(instance=trabajador)
         perfilform = PerfilForm(instance=perfil)
     return render(request, 'trabajador_form.html', {'userform':userform,'perfilform':perfilform})
 
