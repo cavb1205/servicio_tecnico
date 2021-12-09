@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.base import Model
+from datetime import *
 
 class Ciudad(models.Model):
     nombre = models.CharField(max_length=100)
@@ -64,3 +65,5 @@ class Tienda_membresia(models.Model):
     def __str__(self):
         return str(self.tienda) + ' - ' + str(self.membresia) 
 
+
+    

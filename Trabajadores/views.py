@@ -3,17 +3,38 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
+from datetime import *
 
 from django.urls import reverse
 from Servicios.models import Servicios
 from Trabajadores.models import Perfil
 from .forms import TrabajadorForm, PerfilForm, PasswordForm, EditarTrabajadorForm
 
-from Tiendas.models import Tienda
+from Tiendas.models import Tienda, Tienda_membresia
 
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
+
+
+def comprobar_estado_membresia(tienda_id):
+    '''verificamos el estado de la membresia'''
+
+    print('ingresa al metodo comprobar')
+    suscripcion_tienda = Tienda_membresia.objects.get(tienda=tienda_id)
+    print(suscripcion_tienda)
+    print(date.today())
+    vence = suscripcion_tienda.fecha_vencimiento + timedelta(days=1)
+    print(vence)
+    if date.today() == vence:
+        suscripcion_tienda.estado = False
+        print(suscripcion_tienda.estado)
+        suscripcion_tienda.save()
+        print('graba el metodo save comprobacion')
+    else:
+        print('no se ha vencido la suscripcion')
+        return True
+
 
 
 def login_view(request):
@@ -30,10 +51,18 @@ def login_view(request):
             if user is not None:
                 t = user.perfil.tienda
                 tienda = Tienda.objects.get(id=t.id)
+                tienda_id = tienda.id
+                comprobar_estado_membresia(tienda_id)
+                print(type(tienda.tienda_membresia.estado))
                 if tienda.estado == True:
-                    login(request, user)
+                    if tienda.tienda_membresia.estado == 'True':
+                        login(request, user)
                     
-                    return redirect('detalle_tienda', tienda_id=t.id )
+                        return redirect('detalle_tienda', tienda_id=t.id )
+                    else:
+                        print('ingresa suscripcion vencida')
+                        messages.warning(request, 'La suscripción de la tienda ' + tienda.nombre + ' se encuentra vencida, por favor contacta a soporte para activarla.')
+                        return render(request,'login.html')
                 else:
                     print('ingresa al else de la tienda desactivada')
                     messages.warning(request, 'La tienda ' + tienda.nombre + ' se encuentra desactivada, por favor contacta a soporte para activarla.')
