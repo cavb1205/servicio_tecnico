@@ -44,20 +44,22 @@ class Membresia(models.Model):
     )
     nombre = models.CharField(max_length=100, choices=opciones_membresia)
     precio = models.DecimalField( max_digits=10 ,decimal_places=2, default=0)
-    #agregar moneda?????
+    
 
     def __str__(self):
-        return self.nombre
+        todo = self.nombre + ' ' + str(self.precio) + ' ' + 'USD'
+        return todo
 
 
 class Tienda_membresia(models.Model):
     estado_choices = (
-        ('True','Activo'),
-        ('False','Inactiva'),
+        ('Activa','Activa'),
+        ('Vencida','Vencida'),
+        ('Pendiente Pago','Pendiente Pago')
     )
     tienda = models.OneToOneField(Tienda, on_delete=models.CASCADE, 
                                     null=False, blank=False)
-    membresia = models.ForeignKey(Membresia, on_delete=models.CASCADE, default=Membresia.objects.get(nombre='Gratis'))
+    membresia = models.ForeignKey(Membresia, on_delete=models.CASCADE)
     fecha_activacion = models.DateField()
     fecha_vencimiento = models.DateField()
     estado = models.CharField(max_length=50, choices=estado_choices, default=True)

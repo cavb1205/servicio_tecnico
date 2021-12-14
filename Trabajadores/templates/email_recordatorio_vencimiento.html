@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+</head>
+<body>
+    <div class="container">
+        <br>
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="card shadow p-3 mb-3 bg-body rounded" style="max-width: 600px;">
+                    <div class="card-body col-12 p-5 ">
+                        <div class="alert alert-light" role="alert">
+                            <h1 class="text-center text-dark">Recordatorio de vencimiento en Phone Fix System</h1>
+                            <h1 class="text-center text-dark">{{tienda.tienda.nombre|title}}</h1>
+                            <div class="text-center"><small class="text-muted">{{tienda.tienda.ciudad|title}}</small></div>
+                        </div>
+                        
+                        <div class="row justify-content-center my-3" >
+                            <div class="col-12 px-5">
+                                <div class="alert alert-info" role="alert">
+                                    Tu suscripción vence en {{dia}} días, por favor no olvide renovarla para continuar disfrutando del servicio.
+                                </div>
+                                <div class="alert alert-light" role="alert">
+                                    <h4>Datos del Pago</h4>
+                                    <p>Banco Santander Chile Cuenta Corriente: 0 000 78 45226 9 <br>
+                                        Rut: 25.595.432-6 <br>
+                                        Titular: Camilo Andres Varon <br>
+                                        Email: ing.camilo.varon@gmail.com 
+                                    </p>
+                                    <p>Banco Estado Chile Cuenta Ahorros: 02162892480 <br>
+                                        Rut: 25.595.432-6 <br>
+                                        Titular: Camilo Andres Varon <br>
+                                        Email: ing.camilo.varon@gmail.com 
+                                    </p>
+                                    <p>Paypal <a href="https://paypal.me/CamiloVaron?country.x=CL&locale.x=es_XC">@CamiloVaron</a></p>
+
+                                </div>
+
+                                <div class="alert alert-light" role="alert">
+                                    <p>Una vez realices el pago debes enviar el comprobante del mismo al whatsapp de soporte <a href="https://api.whatsapp.com/send?phone=56963511337&text=PhoneFixSystem">+56963511337</a></p>
+                                </div>
+                                <div class="alert alert-light" role="alert">
+                                    <h4><b>Suscripción</b></h4>
+                                    <p><b>Tipo de membresía:</b> {{tienda.membresia.nombre}}</p>
+                                    <p><b>Valor:</b> {{tienda.membresia.precio}} USD</p>
+                                    <p><b>Fecha Activación:</b> {{tienda.fecha_activacion}}</p>
+                                    <p><b>Fecha Vencimiento:</b> {{tienda.fecha_vencimiento}}</p>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                                          
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+</body>
+</html>
+
+

@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.template.loader import get_template
 from datetime import *
 
 from django.urls import reverse
@@ -12,9 +13,30 @@ from .forms import TrabajadorForm, PerfilForm, PasswordForm, EditarTrabajadorFor
 
 from Tiendas.models import Tienda, Tienda_membresia
 
+from django.core.mail import EmailMultiAlternatives
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
+
+from django.conf import settings
+
+
+def email_vencimiento_membresia(suscripcion_tienda, dia):
+    template = get_template('email_recordatorio_vencimiento.html')
+    context = {
+        'tienda':suscripcion_tienda,
+        'dia':dia,
+        }
+    content = template.render(context)
+    email = EmailMultiAlternatives(
+        'Recordatorio vencimiento suscripción en PhoneFixSystem',
+        '',
+        settings.EMAIL_HOST_USER,
+        [suscripcion_tienda.tienda.administrador.email],
+    )
+    email.attach_alternative(content, 'text/html')
+    email.send()
+    return print('email enviado')
 
 
 def comprobar_estado_membresia(tienda_id):
@@ -26,13 +48,18 @@ def comprobar_estado_membresia(tienda_id):
     print(date.today())
     vence = suscripcion_tienda.fecha_vencimiento + timedelta(days=1)
     print(vence)
-    if date.today() == vence:
-        suscripcion_tienda.estado = False
+    if date.today() >= vence:
+        suscripcion_tienda.estado = 'Vencida'
         print(suscripcion_tienda.estado)
         suscripcion_tienda.save()
+        email_vencimiento_membresia(suscripcion_tienda, dia=0)
         print('graba el metodo save comprobacion')
     else:
-        print('no se ha vencido la suscripcion')
+        print('no se ha vencido la suscripcion funcion de mail para recordar')
+        if (date.today() + timedelta(days=3)) == suscripcion_tienda.fecha_vencimiento:
+            email_vencimiento_membresia(suscripcion_tienda, dia=3)
+        elif (date.today() + timedelta(days=1)) == suscripcion_tienda.fecha_vencimiento:
+            email_vencimiento_membresia(suscripcion_tienda, dia=1)
         return True
 
 
@@ -53,15 +80,15 @@ def login_view(request):
                 tienda = Tienda.objects.get(id=t.id)
                 tienda_id = tienda.id
                 comprobar_estado_membresia(tienda_id)
-                print(type(tienda.tienda_membresia.estado))
+                
                 if tienda.estado == True:
-                    if tienda.tienda_membresia.estado == 'True':
+                    if tienda.tienda_membresia.estado == 'Activa':
                         login(request, user)
                     
                         return redirect('detalle_tienda', tienda_id=t.id )
                     else:
                         print('ingresa suscripcion vencida')
-                        messages.warning(request, 'La suscripción de la tienda ' + tienda.nombre + ' se encuentra vencida, por favor contacta a soporte para activarla.')
+                        messages.warning(request, 'La suscripción de la tienda ' + tienda.nombre + ' se encuentra '+ tienda.tienda_membresia.estado +',  por favor contacta a soporte para activarla.')
                         return render(request,'login.html')
                 else:
                     print('ingresa al else de la tienda desactivada')

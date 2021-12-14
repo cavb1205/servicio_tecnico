@@ -15,8 +15,29 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 
 
+def email_cambio_suscripcion(membresia):
+    '''Envia un mail al administrador de la tienda cuando se hace un cambio de 
+    suscripcion para su respectivo pago.'''
+
+    template = get_template('email_cambio_suscripcion.html')
+    context = {
+        'tienda':membresia,
+        }
+    content = template.render(context)
+    email = EmailMultiAlternatives(
+        'Actualización suscripción en PhoneFixSystem',
+        '',
+        settings.EMAIL_HOST_USER,
+        [membresia.tienda.administrador.email],
+    )
+    email.attach_alternative(content, 'text/html')
+    email.send()
+    return print('email enviado')
+
+
 def enviar_email_tienda(tienda, administrador, membresia):
-    print('ingresa a funcion enviar email')
+    '''Envia un email al administrador de la tienda con info del registro'''
+
     template = get_template('email_tienda.html')
     context = {
         'tienda':tienda,
@@ -26,7 +47,7 @@ def enviar_email_tienda(tienda, administrador, membresia):
     content = template.render(context)
 
     email = EmailMultiAlternatives(
-        'Tienda creada en phonefixsystem',
+        'Tienda creada en PhoneFixSystem',
         '',
         settings.EMAIL_HOST_USER,
         [administrador.email],
@@ -53,7 +74,7 @@ def crear_tienda(request):
             tienda.save()
 
             perfil = Perfil.objects.create(trabajador=administrador, identificacion='n/a', biografia='Administrador Tienda', telefono=tienda.telefono, tienda=tienda)
-            membresia = Tienda_membresia.objects.create(tienda=tienda, fecha_activacion=date.today(),fecha_vencimiento=(date.today() + timedelta(days=15)))
+            membresia = Tienda_membresia.objects.create(tienda=tienda, membresia=Membresia.objects.get(nombre='Gratis'), fecha_activacion=date.today(),fecha_vencimiento=(date.today() + timedelta(days=15)))
             enviar_email_tienda(tienda,administrador, membresia)
             messages.success(request, 'Su cuenta ha sido creada con éxito, por favor inicia sesión en el sistema')
             return redirect('login')
@@ -71,33 +92,42 @@ def crear_tienda(request):
 @login_required
 def editar_tienda(request, tienda_id):
     tienda = Tienda.objects.get(id=tienda_id)
-    membresia = Tienda_membresia.objects.get(tienda=tienda_id)
-    print('consulto la tienda y la membresia')
-    print(tienda)
-    print(membresia)
     if request.method == 'POST':
         form = TiendaForm(request.POST, instance=tienda)
-        membresiaform = MembresiaForm(request.POST, instance=membresia)
-        if form.is_valid() and membresiaform.is_valid():
+        if form.is_valid():
             form.save()
-            membresia = membresiaform.save(commit=False)
-            membresia.fecha_activacion = date.today()
-            if membresia.membresia.nombre == 'Mensual':
-                membresia.fecha_vencimiento = membresia.fecha_activacion + timedelta(days=31)
-            elif membresia.membresia.nombre == 'Anual':
-                membresia.fecha_vencimiento = membresia.fecha_activacion + timedelta(days=365)
-            else:
-                pass
-            membresia.save()
             messages.success(request, 'Tienda actualizada con éxito.')
             return redirect('perfil_tienda_detalle', tienda.id)
-
     else:
         print('ingresa al else de editar tienda')
         form = TiendaForm(instance=tienda)
-        membresiaform = MembresiaForm(instance=membresia)
-    return render(request, 'editar_tienda_form.html',{'form':form,'membresiaform':membresiaform})
+        
+    return render(request, 'editar_tienda_form.html',{'form':form})
 
+@login_required
+def editar_suscripcion(request, tienda_id):
+    '''Editamos la suscripcion con los cambios de dias y pagos pendientes'''
+
+    tienda = Tienda.objects.get(id=tienda_id)
+    membresia = Tienda_membresia.objects.get(tienda=tienda)
+    if request.method == 'POST':
+        form = MembresiaForm(request.POST, instance=membresia)
+        if form.is_valid():
+            membresia = form.save(commit=False)
+            membresia.fecha_activacion = date.today()
+            if membresia.membresia.nombre == 'Mensual':
+                membresia.fecha_vencimiento = membresia.fecha_activacion + timedelta(days=31)
+                membresia.estado = 'Pendiente Pago'
+            elif membresia.membresia.nombre == 'Anual':
+                membresia.fecha_vencimiento = membresia.fecha_activacion + timedelta(days=365)
+                membresia.estado = 'Pendiente Pago'
+            membresia.save()
+            email_cambio_suscripcion(membresia)
+            messages.success(request, 'Suscripción actualizada con éxito.')
+            return redirect('perfil_tienda_detalle', tienda.id)
+    else:
+        form = MembresiaForm(instance=membresia)
+    return render(request, 'editar_suscripcion.html',{'form':form})
 
 
 @login_required
