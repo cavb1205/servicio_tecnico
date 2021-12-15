@@ -5,6 +5,8 @@ from .models import Cliente
 from Dispositivos.models import Dispositivo
 from Servicios.models import Servicios
 
+from .filtros import ClienteFilter
+
 from django.db import models
 from django.db.models.base import Model
 from django.shortcuts import redirect, render
@@ -20,9 +22,13 @@ def lista_clientes(request):
    
     lista_clientes = Cliente.objects.filter(tienda=tienda.id)
     total_clientes = lista_clientes.count()
+    filtros = ClienteFilter(request.GET, queryset=lista_clientes)
+    lista_clientes = filtros.qs
+    
     context = {
         'lista_clientes':lista_clientes,
         'total_clientes':total_clientes,
+        'filtros':filtros,
     }
     return render(request, 'lista_clientes.html', context)
 
