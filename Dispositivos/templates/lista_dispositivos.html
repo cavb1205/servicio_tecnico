@@ -39,8 +39,28 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col">
+    <div class="card shadow p-3 mb-4 bg-body rounded card-body">
+      <h5>Filtrar Dispositivos</h5>
+      <form method="get">
+        <div class="row">
+          {% for i in filtros.form %}
+            <div class="col">
+              {{i}}
+            </div>
+          {% endfor %}
+          <div class="col">
+            <button class="btn btn-primary" type="submit">
+              Buscar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
-<br>
    
 <table class="table">
     <thead>

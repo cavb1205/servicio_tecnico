@@ -6,6 +6,8 @@ from Clientes.models import Cliente
 
 from django.contrib import messages
 
+from .filtros import DispositivoFilter
+
 
 @login_required
 def lista_dispositivos(request):
@@ -13,9 +15,14 @@ def lista_dispositivos(request):
     tienda = request.user.perfil.tienda
     lista_dispositivos = Dispositivo.objects.filter(tienda=tienda)
     total_dispositivos = lista_dispositivos.count()
+
+    filtros = DispositivoFilter(request.GET, queryset=lista_dispositivos)
+    lista_dispositivos = filtros.qs
+
     context = {
         'lista_dispositivos':lista_dispositivos,
         'total_dispositivos':total_dispositivos,
+        'filtros':filtros,
     }
     return render(request, 'lista_dispositivos.html', context)
 

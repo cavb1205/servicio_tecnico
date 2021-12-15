@@ -9,6 +9,7 @@ from datetime import *
 from django.urls import reverse
 from Servicios.models import Servicios
 from Trabajadores.models import Perfil
+from .filtros import PerfilFilter
 from .forms import TrabajadorForm, PerfilForm, PasswordForm, EditarTrabajadorForm
 
 from Tiendas.models import Tienda, Tienda_membresia
@@ -110,17 +111,22 @@ def logout_view(request):
 @login_required
 def lista_trabajadores(request):
     tienda = request.user.perfil.tienda.id
-    print(tienda)
+    
     trabajadores = Perfil.objects.filter(tienda=tienda)
-    print(trabajadores)
+    
     
     lista_trabajadores = User.objects.filter(perfil__tienda = tienda).exclude(is_staff=True).order_by('-is_active')
     total_trabajadores = lista_trabajadores.count()
+
+    filtros = PerfilFilter(request.GET, queryset=lista_trabajadores)
+    lista_trabajadores = filtros.qs
+
     for x in lista_trabajadores:
         print(x.groups.all())
     context = {
         'lista_trabajadores':lista_trabajadores,
         'total_trabajadores':total_trabajadores,
+        'filtros':filtros,
     }
     return render(request, 'trabajadores.html', context)
 

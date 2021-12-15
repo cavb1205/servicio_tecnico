@@ -15,6 +15,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 
 
+
+
 def email_cambio_suscripcion(membresia):
     '''Envia un mail al administrador de la tienda cuando se hace un cambio de 
     suscripcion para su respectivo pago.'''
@@ -229,11 +231,12 @@ def detalle_tienda(request, tienda_id ):
         if orden.fecha_cierre_servicio.strftime('%y') == ano:
             total_ingresos_ano = total_ingresos_ano + orden.valor_total
 
-
+    
 
     context = {
         
         'tienda':tienda,
+        
 
         'total_clientes':total_clientes,
         'total_ordenes_servicio':total_ordenes_servicio,

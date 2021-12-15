@@ -11,22 +11,27 @@ from .models import *
 from .forms import *
 
 from Clientes.models import *
-
+from .filtros import ServiciosFilter
 
 import json
 
 
 
 @login_required
-def lista_servicios(requets):
+def lista_servicios(request):
 
-    lista_servicios = Servicios.objects.filter(tienda=requets.user.perfil.tienda.id).order_by('-id')
+    lista_servicios = Servicios.objects.filter(tienda=request.user.perfil.tienda.id).order_by('-id')
     total_servicios = lista_servicios.count()
+
+    filtros = ServiciosFilter(request.GET, queryset=lista_servicios)
+    lista_servicios = filtros.qs
+
     context = {
         'lista_servicios':lista_servicios,
         'total_servicios':total_servicios,
+        'filtros':filtros,
     }
-    return render(requets, 'lista_servicios.html',context)
+    return render(request, 'lista_servicios.html',context)
 
 
 @login_required
