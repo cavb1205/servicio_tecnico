@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+</head>
+<body>
+    <div class="container">
+        <br>
+        <div class="row justify-content-center">
+            <div class="col">
+                <div class="card shadow p-3 mb-3 bg-body rounded" style="max-width: 600px;">
+                    <div class="card-body col-12 p-5 ">
+                        <div class="alert alert-light" role="alert">
+                            <h1 class="text-center text-dark">Actualización Estado Orden # {{servicio.id}} en Phone Fix System</h1>
+                            <h1 class="text-center text-dark">{{servicio.tienda.nombre|title}}</h1>
+                            <div class="text-center"><small class="text-muted">{{servicio.tienda.ciudad|title}}</small></div>
+                        </div>
+                        
+                        <div class="row justify-content-center my-3" >
+                            <div class="col px-5">
+                                
+                                <div class="alert alert-light" role="alert">
+                                    <h4>Información básica de la orden #{{servicio.id}}</h4>
+                                    <p><b>Fecha de ingreso:</b> {{servicio.fecha_ingreso}} <br>
+                                        <b>Cliente: </b> {{servicio.cliente}}<br>
+                                        <b>Dispositivo:</b> {{servicio.dispositivo}}<br>
+                                        <b>Problema inicial:</b> {{servicio.problema_frecuente}} <br>
+                                        <b>Observaciones:</b> {{servicio.observaciones}} <br>
+                                        <b>Estado actual de la orden:</b> {{servicio.estado_orden}} <br>
+                                        <b>Fecha estimada de entrega:</b> {{servicio.fecha_entrega_estimada}} <br>
+                                    </p>
+                                    <p><b>Valor de la revisión:</b> {{servicio.valor_revision}}<br>
+                                        <b>Valor Total Reparación:</b> {{servicio.valor_total}}<br>
+                                        <b>Valor del Abono:</b> {{servicio.abono}}<br>
+                                        <b>Saldo Pendiente:</b> {{servicio.saldo_pendiente}}<br>                           
+                                    </p>
+
+                                </div>
+
+                                <div class="alert alert-light" role="alert">
+                                    <p>Si tienes alguna duda puedes comunicarte con nosotros al {{servicio.tienda.telefono}}</p>
+                                </div>
+                                <div class="alert alert-light text-center" role="alert">
+                                    <a href="www.phonefixsystem.com">www.phonefixsystem.com</a>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                                          
+                        
+                    </div>

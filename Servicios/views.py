@@ -9,6 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from .models import *
 from .forms import *
+from .emails import email_notificacion_cliente
 
 from Clientes.models import *
 from .filtros import ServiciosFilter
@@ -94,7 +95,7 @@ def crear_servicio(request, cliente_id):
             servicio.cliente = cliente
             print(servicio.cliente)
             servicio.save()
-            
+            email_notificacion_cliente(servicio)
             return redirect('detalle_servicio', servicio_id=servicio.id)
 
     else:
@@ -215,6 +216,7 @@ def iniciar_trabajo(request, servicio_id):
                         servicio.saldo_pendiente = (orden.valor_total - orden.abono)
                 orden.save()
                 servicio.save()
+                email_notificacion_cliente(servicio)
                 return redirect('detalle_servicio', servicio_id=servicio.id)
            
 
@@ -225,6 +227,7 @@ def iniciar_trabajo(request, servicio_id):
                 servicio.fecha_cierre_servicio = datetime.today()
                 orden.save()
                 servicio.save()
+                email_notificacion_cliente(servicio)
                 return redirect('detalle_servicio', servicio_id=servicio.id)
                 
                 
@@ -239,6 +242,7 @@ def iniciar_trabajo(request, servicio_id):
                     servicio.saldo_pendiente = (servicio.saldo_pendiente - (orden.abono))
                     orden.save()
                     servicio.save()
+                    email_notificacion_cliente(servicio)
                     return redirect('detalle_servicio', servicio_id=servicio.id)
 
             # Paso 5 Orden aprobada para reparación
@@ -246,6 +250,7 @@ def iniciar_trabajo(request, servicio_id):
                 servicio.saldo_pendiente = orden.valor_total - orden.abono
                 servicio.save()
                 orden.save()
+                email_notificacion_cliente(servicio)
                 return redirect('detalle_servicio', servicio_id=servicio.id)
 
 
@@ -254,6 +259,7 @@ def iniciar_trabajo(request, servicio_id):
                 servicio.saldo_pendiente = orden.valor_total - orden.abono
                 orden.save()
                 servicio.save()
+                email_notificacion_cliente(servicio)
                 return redirect('detalle_servicio', servicio_id=servicio.id)
 
             # Paso 7: Orden reparada, espera entrega al cliente
@@ -262,6 +268,7 @@ def iniciar_trabajo(request, servicio_id):
                 servicio.fecha_cierre_servicio = datetime.today()
                 servicio.save()
                 orden.save()
+                email_notificacion_cliente(servicio)
                 return redirect('detalle_servicio', servicio_id=servicio.id)
 
             # Paso 8: Orden reparada, entregada al cliente
@@ -274,6 +281,7 @@ def iniciar_trabajo(request, servicio_id):
                     servicio.fecha_cierre_servicio = datetime.today()
                 orden.save()
                 servicio.save()
+                email_notificacion_cliente(servicio)
                 return redirect('detalle_servicio', servicio_id=servicio.id)
 
 
@@ -284,6 +292,7 @@ def iniciar_trabajo(request, servicio_id):
                 servicio.solucion_final = 'El equipo no se puede reparar, equipo a la espera de ser reclamado por el cliente.'
                 servicio.save()
                 orden.save()
+                email_notificacion_cliente(servicio)
                 return redirect('detalle_servicio', servicio_id=servicio.id)
 
             # Paso 10: 	Orden no reparada, entregada al cliente
@@ -297,6 +306,7 @@ def iniciar_trabajo(request, servicio_id):
                     servicio.solucion_final = 'El equipo no se puede reparar, equipo entregado al cliente.'
                 orden.save()
                 servicio.save()
+                email_notificacion_cliente(servicio)
                 return redirect('detalle_servicio', servicio_id=servicio.id)      
           
                 

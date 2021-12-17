@@ -1,0 +1,69 @@
+{% extends 'base.html'%}
+
+{% block contenido %}
+<br>
+<div class="container">
+  {% if messages %}
+  <div class="messages">
+      {% for message in messages %}
+      <div{% if message.tags %} class="aler alert-{{ message.tags }}"  role="alert"{% endif %}>{{ message }}</div>
+      {% endfor %}
+  </div>
+  {% endif %}
+
+<div class="row justify-content-md-center mb-2">
+  <div class="col-md-6 mb-2">
+    <div class="card card-body shadow p-3 mb-5 bg-body rounded">
+      <h1 class="text-center">Tiendas</h1>
+      <h5 class="text-center text-primary">Total: {{total}}</h5>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <div class="card shadow p-3 mb-4 bg-body rounded card-body">
+      <h5>Filtrar Ordenes de Servicio</h5>
+      <form method="get">
+        <div class="row">
+          {% for i in filtros.form %}
+            <div class="col">
+              {{i}}
+            </div>
+          {% endfor %}
+          <div class="col">
+            <button class="btn btn-primary" type="submit">
+              Buscar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Tienda</th>
+        <th scope="col">Suscripción</th>
+        <th scope="col">Fecha Vencimiento</th>
+        <th scope="col">Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for tienda in lista_tiendas %}
+      <tr>
+        <th scope="row">{{tienda.nombre|title}}</th>
+        <td>{{tienda.tienda_membresia.membresia}}</td>
+        <td>{{tienda.tienda_membresia.fecha_vencimiento}}</td>
+        <td>{{tienda.tienda_membresia.estado}}</td>
+        <td><a class="btn btn-outline-info" href="#" role="button">Ver</a></td>
+      </tr>
+      
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

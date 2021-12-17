@@ -273,3 +273,214 @@ def detalle_tienda(request, tienda_id ):
 
 
     
+
+
+##################################################
+### vistas de administracion de phonefixsystem ###
+##################################################
+
+@login_required
+def lista_tiendas(request):
+    '''lista todas las tiendas creadas en el sistema'''
+    lista_tiendas = Tienda.objects.all()
+    total = lista_tiendas.count()
+    context = {
+        'lista_tiendas':lista_tiendas,
+        'total':total,
+    }
+    return render(request,'lista_tiendas.html', context)
+
+@login_required
+def lista_tiendas_inactivas(request):
+    '''lista las tiendas inactivas en el sistema'''
+
+    lista_tiendas = Tienda.objects.filter(estado=False)
+    total = lista_tiendas.count()
+
+    context = {
+        'lista_tiendas':lista_tiendas,
+        'total':total,
+    }
+    return render(request,'lista_tiendas.html', context)
+
+
+@login_required
+def lista_tiendas_activas(request):
+    '''lista las tiendas con suscripcion activa en el sistema'''
+    
+    lista_tiendas = Tienda.objects.filter(tienda_membresia__estado='Activa')
+    total = lista_tiendas.count()
+    
+    context = {
+        'lista_tiendas':lista_tiendas,
+        'total':total,
+    }
+    return render(request,'lista_tiendas.html', context)
+
+
+@login_required
+def lista_tiendas_vencidas(request):
+    '''lista las tiendas con suscripcion vencida en el sistema'''
+    
+    lista_tiendas = Tienda.objects.filter(tienda_membresia__estado='Vencida')
+    total = lista_tiendas.count()
+    
+    context = {
+        'lista_tiendas':lista_tiendas,
+        'total':total,
+    }
+    return render(request,'lista_tiendas.html', context)
+
+
+@login_required
+def lista_tiendas_pendientes(request):
+    '''lista las tiendas con suscripcion pendientes de pago en el sistema'''
+    
+    lista_tiendas = Tienda.objects.filter(tienda_membresia__estado='Pendiente Pago')
+    total = lista_tiendas.count()
+    
+    context = {
+        'lista_tiendas':lista_tiendas,
+        'total':total,
+    }
+    return render(request,'lista_tiendas.html', context)
+
+
+@login_required
+def lista_tiendas_por_vencer(request):
+    '''lista las tiendas con suscripcion proxima a vencer (3 dias) en el sistema'''
+    
+    lista_tiendas = Tienda.objects.filter(tienda_membresia__estado='Activa')
+    hoy = date.today()
+    lista_tiendas = []
+    for tienda in lista_tiendas:
+        if hoy >= (tienda.fecha_vencimiento - timedelta(days=3)) and tienda.tienda_membresia.estado == 'Activa':
+            lista_tiendas.append(tienda)
+        else:
+            pass
+
+    total = len(lista_tiendas)
+    
+    context = {
+        'lista_tiendas':lista_tiendas,
+        'total':total,
+    }
+    return render(request,'lista_tiendas.html', context)
+
+def lista_tiendas_por_vencer_dashboard():
+    '''lista las tiendas con suscripcion proxima a vencer (3 dias) en el sistema'''
+    
+    lista_tiendas = Tienda.objects.filter(tienda_membresia__estado='Activa')
+    hoy = date.today()
+    lista_tiendas = []
+    for tienda in lista_tiendas:
+        if hoy >= (tienda.fecha_vencimiento - timedelta(days=3)) and tienda.tienda_membresia.estado == 'Activa':
+            lista_tiendas.append(tienda)
+        else:
+            pass
+    
+    return lista_tiendas
+
+@login_required
+def lista_tiendas_suscripcion_gratuita(request):
+    '''lista las tiendas con suscripcion gratuita en el sistema'''
+    
+    lista_tiendas = Tienda.objects.filter(tienda_membresia__membresia__nombre='Gratis')
+    total = lista_tiendas.count()
+    print(lista_tiendas)
+    context = {
+        'lista_tiendas':lista_tiendas,
+        'total':total,
+    }
+    return render(request,'lista_tiendas.html', context)
+
+
+@login_required
+def lista_tiendas_suscripcion_mensual(request):
+    '''lista las tiendas con suscripcion mensual en el sistema'''
+    
+    lista_tiendas = Tienda.objects.filter(tienda_membresia__membresia__nombre='Mensual')
+    total = lista_tiendas.count()
+    
+    context = {
+        'lista_tiendas':lista_tiendas,
+        'total':total,
+    }
+    return render(request,'lista_tiendas.html', context)
+
+
+@login_required
+def lista_tiendas_suscripcion_anual(request):
+    '''lista las tiendas con suscripcion anual en el sistema'''
+    
+    lista_tiendas = Tienda.objects.filter(tienda_membresia__membresia__nombre='Anual')
+    total = lista_tiendas.count()
+    
+    context = {
+        'lista_tiendas':lista_tiendas,
+        'total':total,
+    }
+    return render(request,'lista_tiendas.html', context)
+
+
+
+
+@login_required
+def admin_dashboard(request):
+    '''dashboard para el administrador del sistema donde ve resumen de todas las tiendas'''
+    
+    
+    
+    #tiendas#
+    lista_tiendas = Tienda.objects.all()
+    total_lista_tiendas = lista_tiendas.count()
+
+    lista_tiendas_activas = Tienda.objects.filter(tienda_membresia__estado='Activa')
+    total_lista_tiendas_activas = lista_tiendas_activas.count()
+
+    lista_tiendas_inactivas = Tienda.objects.filter(estado=False)
+    total_lista_tiendas_inactivas = lista_tiendas_inactivas.count()
+    
+    lista_tiendas_vencidas = Tienda.objects.filter(tienda_membresia__estado='Vencida')
+    total_lista_tiendas_vencidas = lista_tiendas_vencidas.count()
+
+    lista_tiendas_pendientes_pago = Tienda.objects.filter(tienda_membresia__estado='Pendiente Pago')
+    total_lista_tiendas_pendientes_pago = lista_tiendas_pendientes_pago.count()
+
+    lista_tiendas_por_vencer = lista_tiendas_por_vencer_dashboard()
+    total_lista_tiendas_por_vencer = len(lista_tiendas_por_vencer)
+
+    lista_tiendas_suscripcion_gratuita = Tienda.objects.filter(tienda_membresia__membresia__nombre='Gratis')
+    total_lista_tiendas_suscripcion_gratuita = lista_tiendas_suscripcion_gratuita.count()
+
+    lista_tiendas_suscripcion_mensual = Tienda.objects.filter(tienda_membresia__membresia__nombre='Mensual')
+    total_lista_tiendas_suscripcion_mensual = lista_tiendas_suscripcion_mensual.count()
+
+    lista_tiendas_suscripcion_anual = Tienda.objects.filter(tienda_membresia__membresia__nombre='Anual')
+    total_lista_tiendas_suscripcion_anual = lista_tiendas_suscripcion_anual.count()
+
+
+    context = {
+        ##listas de tiendas##
+        'lista_tiendas':lista_tiendas,
+        'lista_tiendas_activas':lista_tiendas_activas,
+        'lista_tiendas_inactivas':lista_tiendas_inactivas,
+        'lista_tiendas_vencidas':lista_tiendas_vencidas,
+        'lista_tiendas_pendientes_pago':lista_tiendas_pendientes_pago,
+        'lista_tiendas_por_vencer':lista_tiendas_por_vencer,
+        'lista_tiendas_suscripcion_gratuita':lista_tiendas_suscripcion_gratuita,
+        'lista_tiendas_suscripcion_mensual':lista_tiendas_suscripcion_mensual,
+        'lista_tiendas_suscripcion_anual':lista_tiendas_suscripcion_anual,
+
+        ##totales##
+        'total_lista_tiendas':total_lista_tiendas,
+        'total_lista_tiendas_activas':total_lista_tiendas_activas,
+        'total_lista_tiendas_inactivas':total_lista_tiendas_inactivas,
+        'total_lista_tiendas_vencidas':total_lista_tiendas_vencidas,
+        'total_lista_tiendas_pendientes_pago':total_lista_tiendas_pendientes_pago,
+        'total_lista_tiendas_por_vencer':total_lista_tiendas_por_vencer,
+        'total_lista_tiendas_suscripcion_gratuita':total_lista_tiendas_suscripcion_gratuita,
+        'total_lista_tiendas_suscripcion_mensual':total_lista_tiendas_suscripcion_mensual,
+        'total_lista_tiendas_suscripcion_anual':total_lista_tiendas_suscripcion_anual,
+    }
+    return render(request,'admin_dashboard.html',context)

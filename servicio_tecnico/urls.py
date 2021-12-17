@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
 from Trabajadores.views import login_view, logout_view
+from Tiendas import views
 
 
 urlpatterns = [
@@ -26,7 +27,20 @@ urlpatterns = [
     path('trabajadores/', include('Trabajadores.urls')),
     path('dispositivo/', include('Dispositivos.urls')),
     path('servicios/', include('Servicios.urls')),
-    
+
+    ###vistas del administrador###
+    path('administrador/dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('administrador/tiendas/', views.lista_tiendas, name='lista_tiendas'),
+    path('administrador/tiendas/activas/', views.lista_tiendas_activas, name='lista_tiendas_activas'),
+    path('administrador/tiendas/inactivas/', views.lista_tiendas_inactivas, name='lista_tiendas_inactivas'),
+    path('administrador/tiendas/vencidas/', views.lista_tiendas_vencidas, name='lista_tiendas_vencidas'),
+    path('administrador/tiendas/pendientes/', views.lista_tiendas_pendientes, name='lista_tiendas_pendientes'),    
+    path('administrador/tiendas/por/vencer/', views.lista_tiendas_por_vencer, name='lista_tiendas_por_vencer'),
+    path('administrador/tiendas/suscripcion/gratuita/', views.lista_tiendas_suscripcion_gratuita, name='lista_tiendas_suscripcion_gratuita'),
+    path('administrador/tiendas/suscripcion/mensual/', views.lista_tiendas_suscripcion_mensual, name='lista_tiendas_suscripcion_mensual'),
+    path('administrador/tiendas/suscripcion/anual/', views.lista_tiendas_suscripcion_anual, name='lista_tiendas_suscripcion_anual'),
+    ################################
+
     path('', login_view, name='inicio'),
 
     #login urls appp trabajadores
