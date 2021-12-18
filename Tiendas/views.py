@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
-from Tiendas.forms import AdminTiendaForm, MembresiaForm, TiendaForm
+from Tiendas.forms import AdminTiendaForm, MembresiaForm, TiendaForm, AdminMembresiaForm
 from Tiendas.models import *
 from datetime import date, datetime, timedelta
 from Trabajadores.models import Perfil
@@ -13,6 +13,8 @@ from Clientes.models import *
 
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
+
+from .filtros import TiendaFilter
 
 
 
@@ -76,7 +78,7 @@ def crear_tienda(request):
             tienda.save()
 
             perfil = Perfil.objects.create(trabajador=administrador, identificacion='n/a', biografia='Administrador Tienda', telefono=tienda.telefono, tienda=tienda)
-            membresia = Tienda_membresia.objects.create(tienda=tienda, membresia=Membresia.objects.get(nombre='Gratis'), fecha_activacion=date.today(),fecha_vencimiento=(date.today() + timedelta(days=15)))
+            membresia = Tienda_membresia.objects.create(tienda=tienda, membresia=Membresia.objects.get(nombre='Gratis'), fecha_activacion=date.today(),fecha_vencimiento=(date.today() + timedelta(days=15)),estado='Activa')
             enviar_email_tienda(tienda,administrador, membresia)
             messages.success(request, 'Su cuenta ha sido creada con éxito, por favor inicia sesión en el sistema')
             return redirect('login')
@@ -129,6 +131,32 @@ def editar_suscripcion(request, tienda_id):
             return redirect('perfil_tienda_detalle', tienda.id)
     else:
         form = MembresiaForm(instance=membresia)
+    return render(request, 'editar_suscripcion.html',{'form':form})
+
+
+@login_required
+def admin_editar_suscripcion(request, id_tienda):
+    '''Editamos la suscripcion con los cambios de dias y pagos pendientes'''
+
+    print('ingresa a admin_editar suscripcion')
+    membresia = Tienda_membresia.objects.get(id=id_tienda)
+    if request.method == 'POST':
+        form = AdminMembresiaForm(request.POST, instance=membresia)
+        if form.is_valid():
+            membresia = form.save(commit=False)
+            membresia.fecha_activacion = date.today()
+            if membresia.membresia.nombre == 'Mensual':
+                membresia.fecha_vencimiento = membresia.fecha_activacion + timedelta(days=31)
+                
+            elif membresia.membresia.nombre == 'Anual':
+                membresia.fecha_vencimiento = membresia.fecha_activacion + timedelta(days=365)
+                
+            membresia.save()
+            email_cambio_suscripcion(membresia)
+            messages.success(request, 'Suscripción actualizada con éxito.')
+            return redirect('admin_detalle_tienda', membresia.id)
+    else:
+        form = AdminMembresiaForm(instance=membresia)
     return render(request, 'editar_suscripcion.html',{'form':form})
 
 
@@ -282,11 +310,16 @@ def detalle_tienda(request, tienda_id ):
 @login_required
 def lista_tiendas(request):
     '''lista todas las tiendas creadas en el sistema'''
-    lista_tiendas = Tienda.objects.all()
+    lista_tiendas = Tienda_membresia.objects.all()
     total = lista_tiendas.count()
+    filtros = TiendaFilter(request.GET, queryset=lista_tiendas)
+    lista_tiendas = filtros.qs
+    
     context = {
         'lista_tiendas':lista_tiendas,
         'total':total,
+        'filtros':filtros,
+        
     }
     return render(request,'lista_tiendas.html', context)
 
@@ -294,12 +327,14 @@ def lista_tiendas(request):
 def lista_tiendas_inactivas(request):
     '''lista las tiendas inactivas en el sistema'''
 
-    lista_tiendas = Tienda.objects.filter(estado=False)
+    lista_tiendas = Tienda_membresia.objects.filter(tienda__estado=False)
     total = lista_tiendas.count()
-
+    filtros = TiendaFilter(request.GET, queryset=lista_tiendas)
+    lista_tiendas = filtros.qs
     context = {
         'lista_tiendas':lista_tiendas,
         'total':total,
+        'filtros':filtros,
     }
     return render(request,'lista_tiendas.html', context)
 
@@ -308,12 +343,15 @@ def lista_tiendas_inactivas(request):
 def lista_tiendas_activas(request):
     '''lista las tiendas con suscripcion activa en el sistema'''
     
-    lista_tiendas = Tienda.objects.filter(tienda_membresia__estado='Activa')
+    lista_tiendas = Tienda_membresia.objects.filter(estado='Activa')
     total = lista_tiendas.count()
+    filtros = TiendaFilter(request.GET, queryset=lista_tiendas)
+    lista_tiendas = filtros.qs
     
     context = {
         'lista_tiendas':lista_tiendas,
         'total':total,
+        'filtros':filtros,
     }
     return render(request,'lista_tiendas.html', context)
 
@@ -322,12 +360,15 @@ def lista_tiendas_activas(request):
 def lista_tiendas_vencidas(request):
     '''lista las tiendas con suscripcion vencida en el sistema'''
     
-    lista_tiendas = Tienda.objects.filter(tienda_membresia__estado='Vencida')
+    lista_tiendas = Tienda_membresia.objects.filter(estado='Vencida')
     total = lista_tiendas.count()
+    filtros = TiendaFilter(request.GET, queryset=lista_tiendas)
+    lista_tiendas = filtros.qs
     
     context = {
         'lista_tiendas':lista_tiendas,
         'total':total,
+        'filtros':filtros,
     }
     return render(request,'lista_tiendas.html', context)
 
@@ -336,12 +377,15 @@ def lista_tiendas_vencidas(request):
 def lista_tiendas_pendientes(request):
     '''lista las tiendas con suscripcion pendientes de pago en el sistema'''
     
-    lista_tiendas = Tienda.objects.filter(tienda_membresia__estado='Pendiente Pago')
+    lista_tiendas = Tienda_membresia.objects.filter(estado='Pendiente Pago')
     total = lista_tiendas.count()
+    filtros = TiendaFilter(request.GET, queryset=lista_tiendas)
+    lista_tiendas = filtros.qs
     
     context = {
         'lista_tiendas':lista_tiendas,
         'total':total,
+        'filtros':filtros,
     }
     return render(request,'lista_tiendas.html', context)
 
@@ -350,7 +394,7 @@ def lista_tiendas_pendientes(request):
 def lista_tiendas_por_vencer(request):
     '''lista las tiendas con suscripcion proxima a vencer (3 dias) en el sistema'''
     
-    lista_tiendas = Tienda.objects.filter(tienda_membresia__estado='Activa')
+    lista_tiendas = Tienda_membresia.objects.filter(estado='Activa')
     hoy = date.today()
     lista_tiendas = []
     for tienda in lista_tiendas:
@@ -360,10 +404,13 @@ def lista_tiendas_por_vencer(request):
             pass
 
     total = len(lista_tiendas)
+    filtros = TiendaFilter(request.GET)
+    lista_tiendas = filtros.qs
     
     context = {
         'lista_tiendas':lista_tiendas,
         'total':total,
+        'filtros':filtros,
     }
     return render(request,'lista_tiendas.html', context)
 
@@ -385,12 +432,14 @@ def lista_tiendas_por_vencer_dashboard():
 def lista_tiendas_suscripcion_gratuita(request):
     '''lista las tiendas con suscripcion gratuita en el sistema'''
     
-    lista_tiendas = Tienda.objects.filter(tienda_membresia__membresia__nombre='Gratis')
+    lista_tiendas = Tienda_membresia.objects.filter(membresia__nombre='Gratis')
     total = lista_tiendas.count()
-    print(lista_tiendas)
+    filtros = TiendaFilter(request.GET, queryset=lista_tiendas)
+    lista_tiendas = filtros.qs
     context = {
         'lista_tiendas':lista_tiendas,
         'total':total,
+        'filtros':filtros,
     }
     return render(request,'lista_tiendas.html', context)
 
@@ -399,12 +448,15 @@ def lista_tiendas_suscripcion_gratuita(request):
 def lista_tiendas_suscripcion_mensual(request):
     '''lista las tiendas con suscripcion mensual en el sistema'''
     
-    lista_tiendas = Tienda.objects.filter(tienda_membresia__membresia__nombre='Mensual')
+    lista_tiendas = Tienda_membresia.objects.filter(membresia__nombre='Mensual')
     total = lista_tiendas.count()
+    filtros = TiendaFilter(request.GET, queryset=lista_tiendas)
+    lista_tiendas = filtros.qs
     
     context = {
         'lista_tiendas':lista_tiendas,
         'total':total,
+        'filtros':filtros,
     }
     return render(request,'lista_tiendas.html', context)
 
@@ -413,17 +465,26 @@ def lista_tiendas_suscripcion_mensual(request):
 def lista_tiendas_suscripcion_anual(request):
     '''lista las tiendas con suscripcion anual en el sistema'''
     
-    lista_tiendas = Tienda.objects.filter(tienda_membresia__membresia__nombre='Anual')
+    lista_tiendas = Tienda_membresia.objects.filter(membresia__nombre='Anual')
     total = lista_tiendas.count()
+    filtros = TiendaFilter(request.GET, queryset=lista_tiendas)
+    lista_tiendas = filtros.qs
     
     context = {
         'lista_tiendas':lista_tiendas,
         'total':total,
+        'filtros':filtros,
     }
     return render(request,'lista_tiendas.html', context)
 
 
-
+@login_required
+def admin_detalle_tienda(request, id_tienda):
+    tienda = Tienda_membresia.objects.get(id=id_tienda)
+    context = {
+        'tienda':tienda,
+    }
+    return render(request,'admin_detalle_tienda.html',context)
 
 @login_required
 def admin_dashboard(request):
@@ -484,3 +545,10 @@ def admin_dashboard(request):
         'total_lista_tiendas_suscripcion_anual':total_lista_tiendas_suscripcion_anual,
     }
     return render(request,'admin_dashboard.html',context)
+
+
+
+
+
+def index(request):
+    return render(request,'index.html')

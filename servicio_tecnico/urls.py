@@ -31,6 +31,8 @@ urlpatterns = [
     ###vistas del administrador###
     path('administrador/dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('administrador/tiendas/', views.lista_tiendas, name='lista_tiendas'),
+    path('administrador/tiendas/<int:id_tienda>/', views.admin_detalle_tienda, name='admin_detalle_tienda'),
+    path('administrador/tiendas/suscripcion/<int:id_tienda>/', views.admin_editar_suscripcion, name='admin_editar_suscripcion'),
     path('administrador/tiendas/activas/', views.lista_tiendas_activas, name='lista_tiendas_activas'),
     path('administrador/tiendas/inactivas/', views.lista_tiendas_inactivas, name='lista_tiendas_inactivas'),
     path('administrador/tiendas/vencidas/', views.lista_tiendas_vencidas, name='lista_tiendas_vencidas'),
@@ -42,6 +44,7 @@ urlpatterns = [
     ################################
 
     path('', login_view, name='inicio'),
+    path('index/', views.index, name='index'),
 
     #login urls appp trabajadores
     path('login/', login_view, name='login'),

@@ -62,3 +62,19 @@ class MembresiaForm(ModelForm):
         widgets = {
             'membresia': forms.Select(attrs={'class':'form-control'}),
         }
+
+
+
+class AdminMembresiaForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AdminMembresiaForm, self).__init__(*args, **kwargs)
+        self.fields['membresia'].queryset = Membresia.objects.exclude(nombre='Gratis')
+    class Meta:
+        model = Tienda_membresia
+        fields = ['membresia','fecha_activacion','fecha_vencimiento','estado']
+        widgets = {
+            'membresia': forms.Select(attrs={'class':'form-control'}),
+            'fecha_activacion': forms.DateInput(attrs={'class':'form-control'}),
+            'fecha_vencimiento': forms.DateInput (attrs={'class':'form-control'}),
+            'estado': forms.Select(attrs={'class':'form-control'}),
+        }

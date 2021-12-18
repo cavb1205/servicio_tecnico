@@ -77,24 +77,28 @@ def login_view(request):
             password = request.POST.get('password')
             user = authenticate(request, username=username, password=password)
             if user is not None:
-                t = user.perfil.tienda
-                tienda = Tienda.objects.get(id=t.id)
-                tienda_id = tienda.id
-                comprobar_estado_membresia(tienda_id)
-                
-                if tienda.estado == True:
-                    if tienda.tienda_membresia.estado == 'Activa':
-                        login(request, user)
-                    
-                        return redirect('detalle_tienda', tienda_id=t.id )
-                    else:
-                        print('ingresa suscripcion vencida')
-                        messages.warning(request, 'La suscripción de la tienda ' + tienda.nombre + ' se encuentra '+ tienda.tienda_membresia.estado +',  por favor contacta a soporte para activarla.')
-                        return render(request,'login.html')
+                if user.is_superuser:
+                    login(request, user)
+                    return redirect('admin_dashboard')
                 else:
-                    print('ingresa al else de la tienda desactivada')
-                    messages.warning(request, 'La tienda ' + tienda.nombre + ' se encuentra desactivada, por favor contacta a soporte para activarla.')
-                    return render(request,'login.html')
+                    t = user.perfil.tienda
+                    tienda = Tienda.objects.get(id=t.id)
+                    tienda_id = tienda.id
+                    comprobar_estado_membresia(tienda_id)
+                
+                    if tienda.estado == True:
+                        if tienda.tienda_membresia.estado == 'Activa':
+                            login(request, user)
+                    
+                            return redirect('detalle_tienda', tienda_id=t.id )
+                        else:
+                            print('ingresa suscripcion vencida')
+                            messages.warning(request, 'La suscripción de la tienda ' + tienda.nombre + ' se encuentra '+ tienda.tienda_membresia.estado +',  por favor contacta a soporte para activarla.')
+                            return render(request,'login.html')
+                    else:
+                        print('ingresa al else de la tienda desactivada')
+                        messages.warning(request, 'La tienda ' + tienda.nombre + ' se encuentra desactivada, por favor contacta a soporte para activarla.')
+                        return render(request,'login.html')
             else:
                 messages.warning(request, 'El usuario no existe o no se encuentra activo, por favor verifica los datos de ingreso')
                 return render(request, 'login.html')
