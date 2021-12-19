@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 from django.urls import reverse_lazy
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -151,7 +152,7 @@ LOGIN_URL = reverse_lazy('login')
 
 
 #datos del servidor de correos para enviar mails
-from decouple import config
+
 
 EMAIL_HOST = 'smtp.googlemail.com'
 EMAIL_PORT = 587
