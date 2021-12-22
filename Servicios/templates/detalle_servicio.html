@@ -8,6 +8,8 @@
       <div class="card-header bg-transparent border-success text-success"><h3>Orden de Servicio # {{servicio.id}}</h3></div>
       <div class="card-body">
         <h6 class="card-title"><b>Cliente:</b> {{servicio.cliente.identificacion}} - {{servicio.cliente.nombres}} {{servicio.cliente.apellidos}} <a class="btn btn-outline-info btn-sm" href="{% url 'detalle_cliente' servicio.cliente.id %}">Ver</a> </h6>
+        <h6 class="card-title"><b>Teléfono:</b> {{servicio.cliente.telefono_principal}}</h6>
+
         <h6 class="card-title"><b>Fecha de Ingreso:</b> {{servicio.fecha_ingreso}}</h6>
         <h6 class="card-title"><b>Dispositivo:</b> <a href="{% url 'detalle_dispositivo' servicio.dispositivo.id %}"> {{servicio.dispositivo.marca}} {{servicio.dispositivo.modelo_dispositivo}}</a></h6>
         <h6 class="card-title"><b>Color Dispositivo:</b> {{servicio.dispositivo.color_dispositivo}} </h6>

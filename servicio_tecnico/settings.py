@@ -28,7 +28,10 @@ SECRET_KEY = 'django-insecure-uqn#8)w-lqip@@h0-$e*22lrgz(ho3a*=w9j&686mf@l6kit96
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['www.phonefixsystem.com']
+if DEBUG:
+    ALLOWED_HOSTS = ['localhost']
+else:
+    ALLOWED_HOSTS = ['www.phonefixsystem.com']
 
 
 # Application definition
