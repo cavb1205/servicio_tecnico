@@ -279,10 +279,10 @@ def iniciar_trabajo(request, servicio_id):
                 else:
                     servicio.saldo_pendiente = orden.valor_total - orden.abono
                     servicio.fecha_cierre_servicio = datetime.today()
-                orden.save()
-                servicio.save()
-                email_notificacion_cliente(servicio)
-                return redirect('detalle_servicio', servicio_id=servicio.id)
+                    orden.save()
+                    servicio.save()
+                    email_notificacion_cliente(servicio)
+                    return redirect('detalle_servicio', servicio_id=servicio.id)
 
 
             # Paso 9: Orden no reparada, espera entrega al cliente
@@ -304,10 +304,10 @@ def iniciar_trabajo(request, servicio_id):
                     servicio.saldo_pendiente = orden.valor_total - orden.abono
                     servicio.fecha_cierre_servicio = datetime.today()
                     servicio.solucion_final = 'El equipo no se puede reparar, equipo entregado al cliente.'
-                orden.save()
-                servicio.save()
-                email_notificacion_cliente(servicio)
-                return redirect('detalle_servicio', servicio_id=servicio.id)      
+                    orden.save()
+                    servicio.save()
+                    email_notificacion_cliente(servicio)
+                    return redirect('detalle_servicio', servicio_id=servicio.id)      
           
                 
     else:
