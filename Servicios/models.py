@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.fields import DecimalField
 from Clientes.models import *
 from Dispositivos.models import *
-from datetime import date
+from datetime import date, datetime
 from Tiendas.models import Tienda
 
 # Create your models here.
@@ -41,7 +41,7 @@ class Servicios(models.Model):
     valor_total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     abono = models.DecimalField(max_digits=10, decimal_places=0, default=0)
     saldo_pendiente = models.DecimalField(max_digits=10, decimal_places=0, default=0)
-    fecha_cierre_servicio = models.DateTimeField(null=True, blank=True)
+    fecha_cierre_servicio = models.DateTimeField(null=True, blank=True, default=datetime.today())
     solucion_final = models.TextField(blank=True, null=True)
     tecnico = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     tienda = models.ForeignKey(Tienda, on_delete=models.CASCADE)

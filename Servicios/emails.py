@@ -19,6 +19,7 @@ def email_notificacion_cliente(servicio):
         '',
         settings.EMAIL_HOST_USER,
         [servicio.cliente.email],
+        
     )
     email.attach_alternative(content, 'text/html')
     email.send()

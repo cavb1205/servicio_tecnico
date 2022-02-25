@@ -248,8 +248,8 @@ def iniciar_trabajo(request, servicio_id):
             # Paso 5 Orden aprobada para reparación
             elif orden.estado_orden.nombre == 'Orden aprobada para reparación':
                 servicio.saldo_pendiente = orden.valor_total - orden.abono
-                servicio.save()
                 orden.save()
+                servicio.save()
                 email_notificacion_cliente(servicio)
                 return redirect('detalle_servicio', servicio_id=servicio.id)
 
@@ -266,8 +266,9 @@ def iniciar_trabajo(request, servicio_id):
             elif orden.estado_orden.nombre == 'Orden reparada, espera entrega al cliente':
                 servicio.saldo_pendiente = orden.valor_total - orden.abono
                 servicio.fecha_cierre_servicio = datetime.today()
-                servicio.save()
                 orden.save()
+                servicio.save()
+                
                 email_notificacion_cliente(servicio)
                 return redirect('detalle_servicio', servicio_id=servicio.id)
 
@@ -290,8 +291,9 @@ def iniciar_trabajo(request, servicio_id):
                 servicio.saldo_pendiente = orden.valor_total - orden.abono
                 servicio.fecha_cierre_servicio = datetime.today()
                 servicio.solucion_final = 'El equipo no se puede reparar, equipo a la espera de ser reclamado por el cliente.'
-                servicio.save()
                 orden.save()
+                servicio.save()
+                
                 email_notificacion_cliente(servicio)
                 return redirect('detalle_servicio', servicio_id=servicio.id)
 
